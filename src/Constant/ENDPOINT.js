@@ -1,1 +1,1 @@
-export const ENDPOINT = 'http://localhost:5034/'
+export const ENDPOINT = 'https://caro-user-api-2.herokuapp.com/'
