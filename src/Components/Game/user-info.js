@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, OverlayTrigger, Popover} from "react-bootstrap";
+import {Button, OverlayTrigger, Popover} from "react-bootstrap";
 import {getUserInfoService} from "../../Core/Service/user-service";
 import { FaMedal } from "react-icons/fa"; // gold
 import { RiMedalFill } from "react-icons/ri";

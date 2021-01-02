@@ -1,5 +1,5 @@
-import axios from "axios";
-import {ENDPOINT} from "../../Constant/ENDPOINT";
+// import axios from "axios";
+// import {ENDPOINT} from "../../Constant/ENDPOINT";
 import {BOARD_SIZE} from "../../Components/Game/board";
 
 export const getUserInfoService = (username) => {
