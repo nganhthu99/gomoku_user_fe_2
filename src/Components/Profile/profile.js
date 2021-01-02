@@ -12,7 +12,7 @@ import GameListItem from "./game-list-item";
 const Profile = (props) => {
     const history = useHistory()
     const [user, setUser] = useState(localStorage.getItem('username'))
-    const [profile, setProfile] = useState(props.location)
+    const [profile, ] = useState(props.location)
     const [userInfo, setUserInfo] = useState({})
 
     useEffect(() => {

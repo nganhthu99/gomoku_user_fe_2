@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Col, OverlayTrigger, Row, Spinner} from "react-bootstrap";
+import {Button, Card, Col, Row, Spinner} from "react-bootstrap";
 import Board from "../Game/board";
-import UserInfo from "../Game/user-info";
 import {FiCircle, FiX} from "react-icons/fi";
 import ChatBox from "../Game/chat-box";
 import {getGameHistoryService} from "../../Core/Service/game-service";

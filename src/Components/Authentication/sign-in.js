@@ -11,7 +11,7 @@ import { useHistory } from "react-router-dom";
 import {RouteName} from "../../Constant/route";
 
 const SignIn = (props) => {
-    const [user, setUser] = useState(localStorage.getItem('username'))
+    const [user, ] = useState(localStorage.getItem('username'))
     const history = useHistory()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -23,7 +23,6 @@ const SignIn = (props) => {
     }, [history, user])
 
     const handleForgetPasswordButton = () => {
-
     }
 
     const handleSignUpButton = () => {
