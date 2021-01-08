@@ -8,6 +8,19 @@ import Profile from "./Components/Profile/profile";
 import {SocketProvider} from "./Core/Provider/socket-provider";
 import GameHistory from "./Components/GameHistory/game-history";
 
+/*
+bug:
+    timer
+    layout
+function:
+    play now
+    invite
+    new game
+    disconnect
+    ranking
+    profile user
+*/
+
 function App() {
   return (
       <SocketProvider>
