@@ -8,6 +8,8 @@ import {FaMedal} from "react-icons/fa";
 import {RiMedalFill} from "react-icons/ri";
 import {BiMedal} from "react-icons/bi";
 import GameListItem from "./game-list-item";
+import ImageUploader from 'react-images-upload';
+import {imgurUploadImageService} from "../../Core/Service/image-upload-service";
 
 const Profile = (props) => {
     const history = useHistory()
@@ -15,6 +17,7 @@ const Profile = (props) => {
     const [profile, ] = useState(props.location)
     const [userInfo, setUserInfo] = useState({})
 
+    const [image, setImage] = useState("https://i.pinimg.com/originals/47/e0/01/47e001f1be26293d7f8826c5b262d9df.jpg")
     useEffect(() => {
         if (user === null) {
             history.push(RouteName.SignIn)
@@ -37,6 +40,19 @@ const Profile = (props) => {
         })
     }
 
+    const handleUploadAvatar = (file, picture) => {
+        console.log(picture[0])
+        const separated = picture[0].split("base64,")
+        imgurUploadImageService(separated[1])
+            .then((response) => {
+                console.log('IMGUR RESPONSE: ', response)
+                setImage(response.data.data.link)
+            })
+            .catch((error) => {
+                console.log('IMGUR ERROR: ', error)
+            })
+}
+
     return (
         <div>
             <Navbar style={{backgroundColor: '#E5F3FC'}}>
@@ -57,7 +73,20 @@ const Profile = (props) => {
                     <Row style={{justifyContent: 'center'}}>
                         <Col>
                             <Card style={{padding: 20, margin: 10, borderColor: '#153FF2', borderWidth: 1}}>
-                                <Card.Img variant="top" src="https://i.pinimg.com/originals/47/e0/01/47e001f1be26293d7f8826c5b262d9df.jpg" />
+                                <Card.Img variant="top" src={image} style={{width: 250, height: 250, display: 'flex', alignSelf: 'center'}}/>
+                                {/*<Button variant='clear' style={{padding: 5}} onClick={handleUploadAvatar}>*/}
+                                {/*    <TiUpload size={20}/>*/}
+                                {/*</Button>*/}
+                                <ImageUploader
+                                    fileContainerStyle={{padding: 0}}
+                                    singleImage={true}
+                                    withIcon={false}
+                                    withLabel={false}
+                                    buttonText='Choose Image'
+                                    onChange={(files, pictures) => {handleUploadAvatar(files, pictures)}}
+                                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                    maxFileSize={5242880}
+                                />
                                 <Card.Body>
                                     <Card.Title style={{textAlign: 'center', fontWeight: 'bold', color: '#153FF2'}}>{`@${userInfo.username}`}</Card.Title>
                                     <Card.Text style={{textAlign: 'center'}}>
@@ -81,7 +110,7 @@ const Profile = (props) => {
                 <Col xs={12} md={8}>
                     <Row style={{justifyContent: 'center'}}>
                         <Col>
-                            <Card style={{padding: 20, margin: 10, borderColor: '#153FF2', borderWidth: 1}}>
+                            <Card style={{padding: 20, margin: 10, borderWidth: 0}}>
                                 <Card.Body>
                                     <Card.Title style={{textAlign: 'center', fontWeight: 'bold', color: '#153FF2'}}>GAME HISTORY</Card.Title>
                                     <Table hover>
