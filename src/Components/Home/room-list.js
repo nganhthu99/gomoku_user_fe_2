@@ -12,31 +12,27 @@ const RoomList = (props) => {
 
     useEffect(() => {
         if (searchInput) {
-            setListRooms(prev => prev.filter(room => room.roomInfo.roomName.includes(searchInput)))
+            setListRooms(prev => prev.filter(room => room.name.includes(searchInput)))
         } else {
             setListRooms(props.items)
         }
     }, [props.items, searchInput])
 
     const handlePlayNow = () => {
-        // props.socket.emit('Create-Room', {
-        //     roomName: 'Random room',
-        //     roomType: 'random',
-        //     roomPassword : ''
-        // }, (returnData) => {
-        //     history.push({
-        //         pathname: '/game',
-        //         search: '?room='+ returnData.roomInfo.roomId,
-        //         state: returnData
-        //     })
-        // });
+        props.socket.emit('Find-Random-Room', (returnData) => {
+            history.push({
+                pathname: '/game',
+                search: '?room=' + returnData.id,
+                state: returnData
+            })
+        })
     }
 
     const handleCreateRoom = (data) => {
         props.socket.emit('Create-Room', data, (returnData) => {
             history.push({
                 pathname: '/game',
-                search: '?room=' + returnData.roomInfo.roomId,
+                search: '?room=' + returnData.id,
                 state: returnData
             })
         });
@@ -46,7 +42,7 @@ const RoomList = (props) => {
         props.socket.emit('Join-Room', data, (returnData) => {
             history.push({
                 pathname: '/game',
-                search: '?room='+ returnData.roomInfo.roomId,
+                search: '?room='+ returnData.id,
                 state: returnData
             })
         })
@@ -75,14 +71,12 @@ const RoomList = (props) => {
                     <th>Room Name</th>
                     <th>Type</th>
                     <th>Status</th>
-                    <th>Players</th>
-                    <th>Watchers</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                    {listRooms.map((item) => <RoomListItem key={item.roomInfo.roomId}
-                                                           item={item.roomInfo}
+                    {listRooms.map((item) => <RoomListItem key={item.id}
+                                                           item={item}
                                                            handleJoinRoom={handleJoinRoom}/>)}
                 </tbody>
             </Table>
