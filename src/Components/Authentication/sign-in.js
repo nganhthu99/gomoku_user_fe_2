@@ -9,6 +9,10 @@ import {
 import {signInService} from "../../Core/Service/authentication-service";
 import { useHistory } from "react-router-dom";
 import {RouteName} from "../../Constant/route";
+import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import { ImFacebook } from "react-icons/im";
+import { GrGoogle } from "react-icons/gr";
 
 const SignIn = (props) => {
     const [user, ] = useState(localStorage.getItem('username'))
@@ -48,12 +52,13 @@ const SignIn = (props) => {
         }
     }
 
-    const handleSignInFacebookButton = () => {
+    const handleSignInFacebookButton = (response) => {
+        console.log('FACEBOOK LOGIN: ', response)
 
     }
 
-    const handleSignInGoogleButton = () => {
-
+    const handleSignInGoogleButton = (response) => {
+        console.log('GOOGLE LOGIN: ', response)
     }
 
     return (
@@ -87,18 +92,27 @@ const SignIn = (props) => {
                             </Button>
                         </Row>
                         <Row style={{justifyContent: 'center', margin: 5}}>
-                            <Button
-                                style={{fontWeight:'bold', width: 220}}
-                                onClick={handleSignInGoogleButton}>
-                                Sign In With Google
-                            </Button>
+                            <GoogleLogin
+                                clientId="854277147892-qtda7vsh27fu8j4u6eeaotljamqj7gv4.apps.googleusercontent.com"
+                                render={renderProps => (
+                                    <Button variant='outline-danger' onClick={renderProps.onClick} style={{fontWeight:'bold', width: 220}}>
+                                        <GrGoogle size={26}/>
+                                    </Button>
+                                )}
+                                onSuccess={handleSignInGoogleButton}
+                                onFailure={() => {console.log('ERROR SIGN IN WITH GOOGLE')}}
+                            />
                         </Row>
                         <Row style={{justifyContent: 'center', margin: 5}}>
-                            <Button
-                                style={{fontWeight:'bold', width: 220}}
-                                onClick={handleSignInFacebookButton}>
-                                Sign In With Facebook
-                            </Button>
+                            <FacebookLogin
+                                render={renderProps => (
+                                    <Button variant='outline-primary' onClick={renderProps.onClick} style={{fontWeight:'bold', width: 220, padding: 5}}>
+                                        <ImFacebook size={26}/>
+                                    </Button>
+                                )}
+                                appId="2439172963055789"
+                                callback={handleSignInFacebookButton}
+                            />
                         </Row>
                     </Form>
                 </Card>
