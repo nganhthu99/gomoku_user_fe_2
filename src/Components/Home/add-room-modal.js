@@ -4,17 +4,17 @@ import {Radio, RadioGroup} from "react-radio-group";
 
 const AddRoomModal = (props) => {
     const [isModalShow, setIsModalShow] = useState(false)
-    const [roomName, setRoomName] = useState('')
-    const [roomType, setRoomType] = useState('public')
-    const [roomPassword, setRoomPassword] = useState('')
+    const [name, setName] = useState('')
+    const [type, setType] = useState('public')
+    const [password, setPassword] = useState('')
 
     const handleCreateRoomButton = () => {
-        if (roomName && roomName.length <= 20) {
-            if (roomType === 'public' || (roomType === 'private' && roomPassword)){
+        if (name && name.length <= 20) {
+            if (type === 'public' || (type === 'private' && password)){
                 props.handleCreateRoom({
-                    roomName,
-                    roomType,
-                    roomPassword
+                    name,
+                    type,
+                    password
                 })
             }
         }
@@ -32,9 +32,9 @@ const AddRoomModal = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <RadioGroup name="room_type"
-                                selectedValue={roomType}
+                                selectedValue={type}
                                 style={{marginBottom: 10}}
-                                onChange={(value) => {setRoomType(value)}}>
+                                onChange={(value) => {setType(value)}}>
                         <div style={{marginBottom: 5}}>
                             <Radio value="public"/>  Public room
                         </div>
@@ -43,15 +43,15 @@ const AddRoomModal = (props) => {
                         </div>
                     </RadioGroup>
                     <FormControl placeholder='Room name'
-                                 value={roomName}
+                                 value={name}
                                  style={{marginBottom: 10}}
-                                 onChange={e => setRoomName(e.target.value)}>
+                                 onChange={e => setName(e.target.value)}>
                     </FormControl>
-                    {roomName && roomName.length > 20 && <p style={{color: '#BF2F15'}}>Room name should have at most 20 characters</p>}
-                    {roomType === 'private' &&
+                    {name && name.length > 20 && <p style={{color: '#BF2F15'}}>Room name should have at most 20 characters</p>}
+                    {type === 'private' &&
                     <FormControl placeholder='Room password'
-                                 value={roomPassword}
-                                 onChange={e => setRoomPassword(e.target.value)}>
+                                 value={password}
+                                 onChange={e => setPassword(e.target.value)}>
                     </FormControl>}
                 </Modal.Body>
                 <Modal.Footer>
