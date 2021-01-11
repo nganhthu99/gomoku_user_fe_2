@@ -3,10 +3,10 @@ import {Button, Card, Col, Row} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import {RouteName} from "../../Constant/route";
 
-const ResultResetPassword = (props) => {
+const ResultActivateAccount = (props) => {
     const history = useHistory()
-    const handleGoToSignInButton = () => {
-        history.push(RouteName.SignIn)
+    const handleGoToHomeButton = () => {
+        history.push(RouteName.Home)
     }
 
     return (
@@ -14,13 +14,13 @@ const ResultResetPassword = (props) => {
             <Col md={6} sx={12}>
                 <Card style={{padding: 20, margin: 10, borderColor: '#153FF2', borderWidth: 1}}>
                     <Card.Title style={{textAlign: 'center'}}>
-                        Reset password successfully
+                        Verify email successfully
                     </Card.Title>
                     <Row style={{justifyContent: 'center', margin: 5}}>
                         <Button
                             style={{fontWeight:'bold', width: 220}}
-                            onClick={handleGoToSignInButton}>
-                            Sign In
+                            onClick={handleGoToHomeButton}>
+                            Go to home
                         </Button>
                     </Row>
                 </Card>
@@ -29,4 +29,4 @@ const ResultResetPassword = (props) => {
     )
 };
 
-export default ResultResetPassword;
+export default ResultActivateAccount;
