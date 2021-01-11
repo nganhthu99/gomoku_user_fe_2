@@ -5,7 +5,7 @@ import {RouteName} from "../../Constant/route";
 import {useHistory} from "react-router-dom";
 
 const UserListItem = (props) => {
-    const user = localStorage.getItem('username')
+    const user = JSON.parse(localStorage.getItem('user'))
 
     const handleOnClick = () => {
         props.handleOnClick(props.item)
@@ -20,14 +20,11 @@ const UserListItem = (props) => {
         hue: 'blue'
     })
 
-    console.log('user: ',user)
-    console.log(props.item)
-
     return (
         <Card style={{backgroundColor: random_color, margin: 5}}>
             <Card.Body style={{padding: 5, backgroundColor: random_color, display: 'flex', justifyContent: 'space-between'}}>
                 <Button variant='clear' style={{color: 'white', fontWeight: 'bold'}} onClick={handleOnClick}>{`@${props.item}`}</Button>
-                {user !== props.item &&
+                {user.displayName !== props.item &&
                 <Button variant='primary' style={{color: 'white'}} onClick={handleInviteButton}>Invite</Button>}
             </Card.Body>
         </Card>
