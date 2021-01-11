@@ -4,5 +4,9 @@ export const RouteName = {
     Home: '/home',
     Game: '/game',
     Profile: '/profile',
-    GameHistory: '/history'
+    GameHistory: '/history',
+    Ranking: '/ranking',
+    ResultResetPassword: '/result-reset-password',
+    ForgetPassword: '/forget-password',
+    ResetPassword: '/reset-password'
 }
