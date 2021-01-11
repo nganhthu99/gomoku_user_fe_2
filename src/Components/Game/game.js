@@ -6,52 +6,54 @@ import {useHistory} from "react-router-dom";
 import { FiX, FiCircle } from "react-icons/fi";
 import UserInfo from "./user-info";
 import { FiFlag } from "react-icons/fi";
-import ResultModal from "./result-modal";
 import ChatBox from "./chat-box";
+import {MemoTimer} from "./CountdownTimer";
+import ResultModal from "./result-modal";
 import {RouteName} from "../../Constant/route";
-import Countdown from 'react-countdown';
-import GameStartModal from "./game-start-modal";
 
-const Game = (props) => {
-    const user = localStorage.getItem('username')
+const GameCopy = (props) => {
+    const user = JSON.parse(localStorage.getItem('user'))
     const history = useHistory()
     const {socket,setSocket} = useContext(SocketContext)
 
-    const [kickStart, setKickStart] = useState(false)
+    const [isXTurn, setIsXTurn] = useState(true)
+    const [room, setRoom] = useState(props.location.state)
+    const [turn, setTurn] = useState(room.game.turn)
+    const [squares, setSquares] = useState(room.game.history[room.game.history.length - 1])
+    const [messages, setMessages] = useState(room.game.messages)
+
     const [gameStart, setGameStart] = useState(false)
     const [gameResult, setGameResult] = useState(null)
-
-    const [room, setRoom] = useState(props.location.state)
-    const roomInfo = room.roomInfo
-    const xPlayer = room.currentGame.turn.move_x
-    const oPlayer = room.currentGame.turn.move_o
-    const [isXTurn, setIsXTurn] = useState(room.currentGame.isXTurn)
-    const [squares, setSquares] = useState(room.currentGame.history[room.currentGame.history.length - 1])
-    const [messages, setMessages] = useState(room.currentGame.messages)
 
     useEffect(() => {
         // window.addEventListener("beforeunload", (e) => {
         //     e.preventDefault();
         //     return e.returnValue = 'Are you sure you want to exit game?';
         // });
-
         return () => {
-            socket.disconnect()
-            setSocket(null)
+            if (socket) {
+                socket.disconnect()
+                setSocket(null)
+            }
         }
     }, [socket, setSocket])
+
+    useEffect(() => {
+        if (room.players.length === 2) {
+            setGameStart(true)
+        }
+    }, [room])
 
     useEffect(() => {
         if (socket === null) {
             history.push(RouteName.Home)
         } else {
-            socket.on('Game-Start', () => {
-                setKickStart(true)
-            })
-
-            socket.on('Game-State', (data) => {
-                setGameResult(data)
-                setGameStart(false)
+            socket.on('Someone-Join-Room', (data) => {
+                console.log(data)
+                setRoom(data)
+                setTurn(data.game.turn)
+                setSquares(data.game.history[data.game.history.length - 1])
+                setMessages(data.game.messages)
             })
 
             socket.on('Move', (data) => {
@@ -61,56 +63,52 @@ const Game = (props) => {
                     return copySquares
                 })
                 setIsXTurn(prev => !prev)
+
             })
 
             socket.on('Message', (data) => {
                 setMessages(prevMessages => [...prevMessages, data]);
             })
 
-            socket.on('Update-Room', (data) => {
-                setRoom(data)
-                setMessages(data.currentGame.messages)
-            })
-
-            socket.on('Update-Game', (data) => {
-                setRoom(data)
-                setIsXTurn(data.currentGame.isXTurn)
-                setSquares(data.currentGame.history[data.currentGame.history.length - 1])
-                setMessages(data.currentGame.messages)
-                setGameResult(null)
+            socket.on('Game-Result', (data) => {
+                setGameResult(data)
+                setGameStart(false)
+                setIsXTurn(true)
             })
         }
-
     }, [history, socket])
 
     const handleClick = (i) => {
-        if (squares[i] === null && isXTurn && user === xPlayer) {
+        if (gameStart && squares[i] === null && isXTurn && user.displayName === turn.move_x) {
             socket.emit('Play-Move', {
-                roomId: room.roomInfo.roomId,
-                move:i,
+                move: i,
                 letter: 'X'
             })
-        } else if (squares[i] === null && !isXTurn && user === oPlayer) {
+        } else if (gameStart && squares[i] === null && !isXTurn && user.displayName === turn.move_o) {
             socket.emit('Play-Move', {
-                roomId: room.roomInfo.roomId,
-                move:i,
+                move: i,
                 letter: 'O'
             })
         }
     }
 
     const handleChatSubmit = (chatMessage) => {
-        socket.emit('Send-Message', {
-            roomId: room.roomInfo.roomId,
-            message: chatMessage
-        })
+        socket.emit('Send-Message', chatMessage)
+    }
+
+    const handleSurrender = () => {
+        socket.emit('Request-Surrender')
+    }
+
+    const handleTimeOut = (player) => {
+        if (user.displayName === player) {
+            socket.emit('Time-Out')
+        }
     }
 
     const handleNewGame = () => {
-        socket.emit('New-Game', {
-            roomId: room.roomInfo.roomId,
-            join_as: (user === xPlayer || user === oPlayer ? 'player' : 'watcher')
-        })
+        socket.emit('Request-New-Game')
+        setGameResult(null)
     }
 
     const handleExitGame = () => {
@@ -118,67 +116,35 @@ const Game = (props) => {
         setSocket(null)
     }
 
-    const handleSurrender = () => {
-        socket.emit('Request-Surrender', {
-            roomId: room.roomInfo.roomId
-        })
-    }
-
-    const handleTimeOut = () => {
-        socket.emit('Time-Out', {
-            roomId: room.roomInfo.roomId
-        })
-    }
-
-    const handleGameStartComplete = () => {
-        setKickStart(false)
-        setGameStart(true)
-    }
-
-    const renderer = ({ minutes, seconds, completed }) => {
-        if (completed) {
-            // Render a completed state
-            return <span>Time out!</span>;
-        } else {
-            // Render a countdown
-            return <span>{`0${minutes} : ${seconds}`}</span>;
-        }
-    };
-
     return (
-        <Row noGutters style={{height: '100vh', backgroundColor: '#E5F3FC', justifyContent: 'center', alignItems: 'center', padding: 5}}>
+        <Row noGutters style={{height: '100vh', padding: 5}}>
             {/*board*/}
-            <Col xs={12} md={6}>
+            <Col xs={12} md={6} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 <Board squares={squares}
                        onClickHandle={(i) => handleClick(i)}
                        winnerLine={gameResult ? gameResult.line : []}/>
             </Col>
 
-            <Col xs={12} md={6} >
-                <p style={{textAlign: 'center', color: '#153FF2', fontWeight: 'bold'}}>{`ROOM ID: ${roomInfo.roomId} - ROOM NAME: ${roomInfo.roomName}`}</p>
-
+            <Col xs={12} md={6} style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                <p style={{textAlign: 'center', color: '#153FF2', fontWeight: 'bold'}}>{`ROOM ID: ${room.id} - ROOM NAME: ${room.name}`}</p>
                 {/*players*/}
-                <Row noGutters style={{justifyContent: 'center'}}>
+                <Row noGutters>
                     <Col xs={6}>
-                        {xPlayer &&
+                        {turn.move_x &&
                         <Card>
-                            <Card.Body style={(isXTurn && gameStart) ? {backgroundColor: '#71C6FF'} : {}}>
+                            <Card.Body>
                                 <Card.Title style={{textAlign: 'center', color: '#153FF2'}}>
-                                    <UserInfo player={xPlayer} color='green'/>
+                                    <UserInfo player={turn.move_x} color='green'/>
                                 </Card.Title>
                                 <div style={{textAlign: 'center'}}><FiX size={30} color='green'/></div>
                                 <Card.Text style={{textAlign: 'center', margin: 0}}>
                                     {isXTurn && gameStart &&
-                                    <Countdown
-                                        onComplete={handleTimeOut}
-                                        date={Date.now() + 119000}
-                                        renderer={renderer}
-                                    />}
+                                    <MemoTimer time={room.time} handleTimeOut={() => handleTimeOut(turn.move_x)}/>}
                                     {(!isXTurn || !gameStart) && '00 : 00'}
                                 </Card.Text>
                                 <div style={{textAlign: 'center'}}>
                                     <Button variant="primary"
-                                            disabled={user !== xPlayer}
+                                            disabled={user.displayName !== turn.move_x}
                                             onClick={handleSurrender}>
                                         <FiFlag/>
                                         Surrender
@@ -186,27 +152,23 @@ const Game = (props) => {
                                 </div>
                             </Card.Body>
                         </Card>}
-                        {!xPlayer && <div style={{textAlign: 'center', paddingTop: 60}}><Spinner animation="border" variant='primary'/></div>}
+                        {!turn.move_x && <div style={{textAlign: 'center', paddingTop: 60}}><Spinner animation="border" variant='primary'/></div>}
                     </Col>
                     <Col xs={6}>
-                        {oPlayer &&
+                        {turn.move_o &&
                         <Card>
-                            <Card.Body style={(!isXTurn && gameStart) ? {backgroundColor: '#71C6FF'} : {}}>
+                            <Card.Body>
                                 <Card.Title style={{textAlign: 'center', color: '#153FF2'}}>
-                                    <UserInfo player={oPlayer} color='red'/>
+                                    <UserInfo player={turn.move_o} color='red'/>
                                 </Card.Title>
                                 <div style={{textAlign: 'center'}}><FiCircle size={30} color='red'/></div>
                                 <Card.Text style={{textAlign: 'center', margin: 0}}>
                                     {!isXTurn && gameStart &&
-                                    <Countdown
-                                        onComplete={handleTimeOut}
-                                        date={Date.now() + 119000}
-                                        renderer={renderer}
-                                    />}
+                                    <MemoTimer time={room.time} handleTimeOut={() => handleTimeOut(turn.move_o)}/>}
                                     {(isXTurn || !gameStart) && '00 : 00'}
                                 </Card.Text>
                                 <div style={{textAlign: 'center'}}>
-                                    <Button disabled={user !== oPlayer}
+                                    <Button disabled={user.displayName !== turn.move_o}
                                             onClick={handleSurrender}
                                             variant="primary">
                                         <FiFlag/>
@@ -215,21 +177,20 @@ const Game = (props) => {
                                 </div>
                             </Card.Body>
                         </Card>}
-                        {!oPlayer && <div style={{textAlign: 'center', paddingTop: 60}}><Spinner animation="border" variant='primary'/></div>}
+                        {!turn.move_o && <div style={{textAlign: 'center', paddingTop: 60}}><Spinner animation="border" variant='primary'/></div>}
                     </Col>
                 </Row>
 
                 {/*chatbox*/}
                 <ChatBox messages={messages}
                          handleChatSubmit={handleChatSubmit}/>
+                <ResultModal
+                    handleNewGame={handleNewGame}
+                    handleExitGame={handleExitGame}
+                    gameResult={gameResult}/>
             </Col>
-            <ResultModal
-                handleNewGame={handleNewGame}
-                handleExitGame={handleExitGame}
-                gameResult={gameResult}/>
-            <GameStartModal isModalShow={kickStart} handleOnComplete={handleGameStartComplete}/>
         </Row>
     )
 };
 
-export default Game;
+export default GameCopy;
