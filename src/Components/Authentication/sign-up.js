@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import {Col, Form, Card, Button, Row} from "react-bootstrap";
 import {
     renderConfirmPasswordValidation,
-    renderEmailValidation, renderPasswordValidation,
+    renderEmailValidation,
+    renderPasswordValidation,
     renderUsernameValidation,
     validateConfirmPasswordUtil,
     validateEmailUtil,
@@ -15,7 +16,7 @@ import {RouteName} from "../../Constant/route";
 
 const SignUp = (props) => {
     const [username, setUsername] = useState("")
-    // const [email, setEmail] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const history = useHistory()
@@ -26,16 +27,16 @@ const SignUp = (props) => {
 
     const handleSignUpButton = () => {
         if (validateUsernameUtil(username) &&
-            // validateEmailUtil(email) &&
+            validateEmailUtil(email) &&
             validatePasswordUtil(password) &&
             validateConfirmPasswordUtil(confirmPassword, password)) {
-            signUpService(username, password, username)
+            signUpService(username, email, password, username)
                 .then((response) => {
                     if (response.data.success) {
                         alert('Signing up successfully.')
                         history.push('/sign-in')
                     } else if (!response.data.success) {
-                        alert('Error signing up. Username already existed.')
+                        alert('Error signing up. Username or email already existed.')
                     }
                 })
                 .catch((error) => {
@@ -54,11 +55,11 @@ const SignUp = (props) => {
                             <Form.Control onChange={(e) => setUsername(e.target.value)}/>
                             <p style={{color: '#BF2F15', fontSize: 14}}>{renderUsernameValidation(username)}</p>
                         </Form.Group>
-                        {/*<Form.Group>*/}
-                        {/*    <Form.Label style={{color: '#153FF2', fontWeight: 'bold'}}>Email</Form.Label>*/}
-                        {/*    <Form.Control onChange={(e) => setEmail(e.target.value)}/>*/}
-                        {/*    <p style={{color: '#BF2F15', fontSize: 14}}>{renderEmailValidation(email)}</p>*/}
-                        {/*</Form.Group>*/}
+                        <Form.Group>
+                            <Form.Label style={{color: '#153FF2', fontWeight: 'bold'}}>Email</Form.Label>
+                            <Form.Control onChange={(e) => setEmail(e.target.value)}/>
+                            <p style={{color: '#BF2F15', fontSize: 14}}>{renderEmailValidation(email)}</p>
+                        </Form.Group>
                         <Form.Group>
                             <Form.Label style={{color: '#153FF2', fontWeight: 'bold'}}>Password</Form.Label>
                             <Form.Control type="password" onChange={(e) => setPassword(e.target.value)}/>
