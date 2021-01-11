@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Navbar, Dropdown, DropdownButton, Row, Col, Button} from "react-bootstrap";
+import {Navbar, Dropdown, DropdownButton, Row, Col, Button, Container, Spinner} from "react-bootstrap";
 import RoomList from "./room-list";
 import UserList from "./user-list";
 import {io} from "socket.io-client"
@@ -12,7 +12,7 @@ import InvitationModal from "./invitation-modal";
 
 const Home = (props) => {
     const history = useHistory()
-    const [user, setUser] = useState(localStorage.getItem('username'))
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const {socket, setSocket} = useContext(SocketContext)
     const [listUsers, setListUsers] = useState([])
     const [listRooms, setListRooms] = useState([])
@@ -30,7 +30,7 @@ const Home = (props) => {
             setSocket(io(ENDPOINT, {
                 transports: ['websocket'],
                 query: {
-                    username: user
+                    username: user.displayName
                 }
             }))
         }
@@ -43,12 +43,10 @@ const Home = (props) => {
             })
 
             socket.on('Active-Rooms', (data) => {
-                console.log(data)
                 setListRooms(data)
             })
 
             socket.on('Invitation', (data) => {
-                console.log('INVITATION: ', data)
                 setInvitation(data)
             })
         }
@@ -57,7 +55,7 @@ const Home = (props) => {
     const handleProfileButton = () => {
         history.push({
             pathname: RouteName.Profile,
-            search: '?user=' + user,
+            search: '?user=' + user.displayName,
         })
     }
 
@@ -87,41 +85,49 @@ const Home = (props) => {
         })
     }
 
-    return (
-        <div>
-            <Navbar style={{backgroundColor: '#E5F3FC'}}>
-                <Navbar.Brand style={{color: '#153FF2', fontWeight: 'bold', flexGrow: 1}}>
-                    GOMOKU
-                </Navbar.Brand>
-                <Button variant='danger' style={{marginRight: 10}} onClick={handleRankingButton}>
-                    Ranking
-                    <GiTrophyCup/>
-                </Button>
-                <DropdownButton
-                    menuAlign="right"
-                    title={user}>
-                    <Dropdown.Item onClick={handleProfileButton}>
-                        Profile
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={handleSignOutButton}>
-                        Sign Out
-                    </Dropdown.Item>
-                </DropdownButton>
-            </Navbar>
-            <Row noGutters>
-                <Col xs={12} md={9} style={{paddingTop: 10}}>
-                    <RoomList items={listRooms}
-                              socket={socket}/>
-                </Col>
-                <Col xs={12} md={3} style={{paddingTop: 10}}>
-                    <UserList items={listUsers}
-                              socket={socket}/>
-                </Col>
-            </Row>
-            <InvitationModal invitation={invitation}
-                             handleReplyInvitation={handleReplyInvitation}/>
-        </div>
-    )
+    if (user) {
+        return (
+            <div>
+                <Navbar style={{backgroundColor: '#E5F3FC'}}>
+                    <Navbar.Brand style={{color: '#153FF2', fontWeight: 'bold', flexGrow: 1}}>
+                        GOMOKU
+                    </Navbar.Brand>
+                    <Button variant='danger' style={{marginRight: 10}} onClick={handleRankingButton}>
+                        Ranking
+                        <GiTrophyCup/>
+                    </Button>
+                    <DropdownButton
+                        menuAlign="right"
+                        title={user.displayName}>
+                        <Dropdown.Item onClick={handleProfileButton}>
+                            Profile
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={handleSignOutButton}>
+                            Sign Out
+                        </Dropdown.Item>
+                    </DropdownButton>
+                </Navbar>
+                <Row noGutters>
+                    <Col xs={12} md={8} style={{paddingTop: 10}}>
+                        <RoomList items={listRooms}
+                                  socket={socket}/>
+                    </Col>
+                    <Col xs={12} md={4} style={{paddingTop: 10}}>
+                        <UserList items={listUsers}
+                                  socket={socket}/>
+                    </Col>
+                </Row>
+                <InvitationModal invitation={invitation}
+                                 handleReplyInvitation={handleReplyInvitation}/>
+            </div>
+        )
+    } else {
+        return (
+            <Container style={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <Spinner animation="border" variant='primary'/>
+            </Container>
+        )
+    }
 };
 
 export default Home;
