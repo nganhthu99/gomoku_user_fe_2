@@ -1,9 +1,6 @@
 import React from 'react';
 
 const GameListItem = (props) => {
-    const user = localStorage.getItem('username')
-    const rival = (props.item.turn.move_x === user) ? props.item.turn.move_o : props.item.turn.move_x
-
     const handleOnClick = () => {
         props.handleClick(props.item._id)
     }
@@ -12,7 +9,7 @@ const GameListItem = (props) => {
         <tr onClick={handleOnClick}>
             <td>{props.item.playedDate}</td>
             <td>{props.item.room}</td>
-            <td>{rival}</td>
+            <td>{props.item.winner}</td>
         </tr>
     )
 };
