@@ -12,7 +12,7 @@ const RankingItem = (props) => {
     })
 
     const handleOnClick = () => {
-        props.handleOnClick(props.item)
+        props.handleOnClick(props.item.displayName)
     }
 
     return (

@@ -33,7 +33,6 @@ const Profile = (props) => {
         const token = localStorage.getItem('token')
         getUserByDisplayName(profile, token)
             .then((response) => {
-                console.log('RESPONSE: ', response.data)
                 if (response.status === 200) {
                     setUserInfo(response.data.user[0])
                     setImage(response.data.user[0].avatar)
@@ -77,7 +76,9 @@ const Profile = (props) => {
         return (
             <div>
                 <Navbar style={{backgroundColor: '#E5F3FC'}}>
-                    <Navbar.Brand style={{color: '#153FF2', fontWeight: 'bold', flexGrow: 1}}>
+                    <Navbar.Brand
+                        onClick={() => {history.push('/home')}}
+                        style={{color: '#153FF2', fontWeight: 'bold', flexGrow: 1}}>
                         GOMOKU
                     </Navbar.Brand>
                     {user.displayName === profile &&
