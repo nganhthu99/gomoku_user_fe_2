@@ -169,7 +169,8 @@ const SignIn = (props) => {
                         </Row>
                         <Row style={{justifyContent: 'center', margin: 5}}>
                             <GoogleLogin
-                                clientId="854277147892-qtda7vsh27fu8j4u6eeaotljamqj7gv4.apps.googleusercontent.com"
+                                clientId="846280586932-oabrjoonglegin6tf7q1qn6jm192g0qn.apps.googleusercontent.com"
+                                // clientId="854277147892-qtda7vsh27fu8j4u6eeaotljamqj7gv4.apps.googleusercontent.com"
                                 render={renderProps => (
                                     <Button variant='outline-danger' onClick={renderProps.onClick} style={{fontWeight:'bold', width: 220}}>
                                         <GrGoogle size={26}/>
@@ -187,7 +188,8 @@ const SignIn = (props) => {
                                     </Button>
                                 )}
                                 fields="name,email,picture"
-                                appId="2439172963055789"
+                                appId="4166090010091919|5558yQbRtuqtUNI8uJfcSkqC3ig"
+                                // appId="2439172963055789"
                                 callback={handleSignInFacebookButton}
                             />
                         </Row>
