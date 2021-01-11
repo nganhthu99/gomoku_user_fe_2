@@ -1,20 +1,22 @@
 import React, {useState} from 'react';
-import {Button, FormControl, Modal} from "react-bootstrap";
+import {Button, FormControl, FormLabel, Modal} from "react-bootstrap";
 import {Radio, RadioGroup} from "react-radio-group";
 
 const AddRoomModal = (props) => {
     const [isModalShow, setIsModalShow] = useState(false)
     const [name, setName] = useState('')
+    const [time, setTime] = useState(2)
     const [type, setType] = useState('public')
     const [password, setPassword] = useState('')
 
     const handleCreateRoomButton = () => {
-        if (name && name.length <= 20) {
+        if (name && name.length <= 20 && time) {
             if (type === 'public' || (type === 'private' && password)){
                 props.handleCreateRoom({
                     name,
                     type,
-                    password
+                    password,
+                    time
                 })
             }
         }
@@ -22,12 +24,12 @@ const AddRoomModal = (props) => {
 
     return (
         <>
-            <Button style={{width: '15%', margin: 2}}
+            <Button style={{margin: 2, padding: 5}}
                     onClick={() => {setIsModalShow(true)}}>
                 Add Room
             </Button>
             <Modal show={isModalShow} onHide={() => {setIsModalShow(false)}}>
-                <Modal.Header closeButton>
+                <Modal.Header closeButtoncloseButton>
                     <Modal.Title>Create Room</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -42,10 +44,17 @@ const AddRoomModal = (props) => {
                             <Radio value="private"/>  Private room
                         </div>
                     </RadioGroup>
-                    <FormControl placeholder='Room name'
+                    <FormLabel>Room name</FormLabel>
+                    <FormControl
                                  value={name}
                                  style={{marginBottom: 10}}
                                  onChange={e => setName(e.target.value)}>
+                    </FormControl>
+                    <FormLabel>Room time-out settings (in minute)</FormLabel>
+                    <FormControl
+                                 value={time}
+                                 style={{marginBottom: 10}}
+                                 onChange={e => setTime(Number(e.target.value))}>
                     </FormControl>
                     {name && name.length > 20 && <p style={{color: '#BF2F15'}}>Room name should have at most 20 characters</p>}
                     {type === 'private' &&
