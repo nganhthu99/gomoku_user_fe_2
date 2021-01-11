@@ -2,8 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {Card, Col, Container, Dropdown, DropdownButton, Navbar, Row, Spinner, Table} from "react-bootstrap";
 import {
     getUserByDisplayName,
-    getUserByUsername,
-    getUserWithGameInfoService,
     updateUserAvatar
 } from "../../Core/Service/user-service";
 import {RouteName} from "../../Constant/route";
@@ -75,7 +73,7 @@ const Profile = (props) => {
             })
     }
 
-    if (userInfo) {
+    if (userInfo && user) {
         return (
             <div>
                 <Navbar style={{backgroundColor: '#E5F3FC'}}>
