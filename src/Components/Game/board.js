@@ -31,9 +31,9 @@ const Board = (props) => {
     }
 
     return (
-        <Container>
+        <div>
             {createSquares(BOARD_SIZE)}
-        </Container>
+        </div>
     )
 }
 
