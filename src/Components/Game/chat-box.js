@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Card, FormControl} from "react-bootstrap";
 
 const ChatBox = (props) => {
+    const user = JSON.parse(localStorage.getItem('user'))
     const [chatMessage, setChatMessage] = useState('')
 
     const handleChatSubmit = (e) => {
@@ -18,7 +19,7 @@ const ChatBox = (props) => {
                 <Card.Title>Chat Box</Card.Title>
                 <div className='scroll-view-chat'>
                     {props.messages.map((msg) => {
-                        if (msg.sender === localStorage.getItem('username')) {
+                        if (msg.sender === user.displayName) {
                             return <p style={{textAlign: 'right'}}>{`${msg.message} :`}<mark style={{backgroundColor: 'blue', color: 'white'}}>{`${msg.sender}`}</mark></p>
                         } else {
                             return <p style={{textAlign: 'left'}}><mark style={{backgroundColor: 'green', color: 'white'}}>{`${msg.sender}`}</mark>{`: ${msg.message}`}</p>
