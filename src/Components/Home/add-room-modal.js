@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, FormControl, FormLabel, Modal} from "react-bootstrap";
+import {Button, FormControl, FormGroup, FormLabel, Modal} from "react-bootstrap";
 import {Radio, RadioGroup} from "react-radio-group";
 
 const AddRoomModal = (props) => {
@@ -44,24 +44,31 @@ const AddRoomModal = (props) => {
                             <Radio value="private"/>  Private room
                         </div>
                     </RadioGroup>
-                    <FormLabel>Room name</FormLabel>
-                    <FormControl
-                                 value={name}
-                                 style={{marginBottom: 10}}
-                                 onChange={e => setName(e.target.value)}>
-                    </FormControl>
-                    <FormLabel>Room time-out settings (in minute)</FormLabel>
-                    <FormControl
-                                 value={time}
-                                 style={{marginBottom: 10}}
-                                 onChange={e => setTime(Number(e.target.value))}>
-                    </FormControl>
+                    <FormGroup>
+                        <FormLabel>Room name</FormLabel>
+                        <FormControl
+                                     value={name}
+                                     style={{marginBottom: 10}}
+                                     onChange={e => setName(e.target.value)}>
+                        </FormControl>
+                    </FormGroup>
+                    <FormGroup>
+                        <FormLabel>Room time-out settings (in minute)</FormLabel>
+                        <FormControl
+                                     value={time}
+                                     style={{marginBottom: 10}}
+                                     onChange={e => setTime(Number(e.target.value))}>
+                        </FormControl>
+                    </FormGroup>
                     {name && name.length > 20 && <p style={{color: '#BF2F15'}}>Room name should have at most 20 characters</p>}
                     {type === 'private' &&
-                    <FormControl placeholder='Room password'
-                                 value={password}
-                                 onChange={e => setPassword(e.target.value)}>
-                    </FormControl>}
+                        <FormGroup>
+                            <FormLabel>Room password</FormLabel>
+                            <FormControl
+                                         value={password}
+                                         onChange={e => setPassword(e.target.value)}>
+                            </FormControl>
+                        </FormGroup>}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={handleCreateRoomButton}>
