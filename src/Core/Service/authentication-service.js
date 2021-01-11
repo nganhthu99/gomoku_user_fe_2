@@ -12,11 +12,10 @@ export const signUpService = (username, email, password, displayName) => {
     })
 }
 
-export const signUpSocialAccountService = (id, email, displayName, password='12345678') => {
+export const signUpSocialAccountService = (id, email, displayName) => {
     return axios.post(ENDPOINT + 'users/signup', {
         username: id,
         email,
-        password,
         displayName
     }, {
         validateStatus: () => true
@@ -48,6 +47,9 @@ export const requestVerificationService = (username) => {
 }
 
 export const resetPasswordService = (token, password) => {
+    if (token.substring(0, 3) !== 'JWT') {
+        token = 'Bearer ' + token
+    }
     return axios.post(ENDPOINT + 'users/reset-password?token=' + token, {
         newPassword: password
     }, {
@@ -56,6 +58,9 @@ export const resetPasswordService = (token, password) => {
 }
 
 export const requestEmailVerification = (token, username) => {
+    if (token.substring(0, 3) !== 'JWT') {
+        token = 'Bearer ' + token
+    }
     return axios.post(ENDPOINT + 'users/request-verification', {
         username
     }, {
