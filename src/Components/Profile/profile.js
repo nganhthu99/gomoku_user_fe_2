@@ -1,6 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {Card, Col, Dropdown, DropdownButton, Navbar, Row, Table} from "react-bootstrap";
-import {getUserWithGameInfoService} from "../../Core/Service/user-service";
+import {Card, Col, Container, Dropdown, DropdownButton, Navbar, Row, Spinner, Table} from "react-bootstrap";
+import {
+    getUserByDisplayName,
+    getUserByUsername,
+    getUserWithGameInfoService,
+    updateUserAvatar
+} from "../../Core/Service/user-service";
 import {RouteName} from "../../Constant/route";
 import {useHistory} from "react-router-dom";
 import {GiCutDiamond} from "react-icons/gi";
@@ -10,14 +15,16 @@ import {BiMedal} from "react-icons/bi";
 import GameListItem from "./game-list-item";
 import ImageUploader from 'react-images-upload';
 import {imgurUploadImageService} from "../../Core/Service/image-upload-service";
+import queryString from 'query-string'
+import {GiTrophyCup} from "react-icons/gi";
 
 const Profile = (props) => {
     const history = useHistory()
-    const [user, setUser] = useState(localStorage.getItem('username'))
-    const [profile, ] = useState(props.location)
-    const [userInfo, setUserInfo] = useState({})
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
+    const [profile, ] = useState(queryString.parse(props.location.search).user)
+    const [userInfo, setUserInfo] = useState(null)
+    const [image, setImage] = useState(null)
 
-    const [image, setImage] = useState("https://i.pinimg.com/originals/47/e0/01/47e001f1be26293d7f8826c5b262d9df.jpg")
     useEffect(() => {
         if (user === null) {
             history.push(RouteName.SignIn)
@@ -25,7 +32,15 @@ const Profile = (props) => {
     }, [history, user])
 
     useEffect(() => {
-        setUserInfo(getUserWithGameInfoService(profile))
+        const token = localStorage.getItem('token')
+        getUserByDisplayName(profile, token)
+            .then((response) => {
+                console.log('RESPONSE: ', response.data)
+                if (response.status === 200) {
+                    setUserInfo(response.data.user[0])
+                    setImage(response.data.user[0].avatar)
+                }
+            })
     }, [profile])
 
     const handleSignOutButton = () => {
@@ -41,100 +56,126 @@ const Profile = (props) => {
     }
 
     const handleUploadAvatar = (file, picture) => {
-        console.log(picture[0])
+        const token = localStorage.getItem('token')
         const separated = picture[0].split("base64,")
         imgurUploadImageService(separated[1])
             .then((response) => {
                 console.log('IMGUR RESPONSE: ', response)
-                setImage(response.data.data.link)
+                const imageUrl = response.data.data.link
+                updateUserAvatar(user.username, imageUrl, token)
+                    .then((response) => {
+                        console.log('API RESPONSE: ', response)
+                        if (response.status === 200) {
+                            setImage(imageUrl)
+                        }
+                    })
             })
             .catch((error) => {
                 console.log('IMGUR ERROR: ', error)
             })
-}
+    }
 
-    return (
-        <div>
-            <Navbar style={{backgroundColor: '#E5F3FC'}}>
-                <Navbar.Brand style={{color: '#153FF2', fontWeight: 'bold', flexGrow: 1}}>
-                    GOMOKU
-                </Navbar.Brand>
-                {user === profile &&
-                <DropdownButton
-                    menuAlign="right"
-                    title={user}>
-                    <Dropdown.Item onClick={handleSignOutButton}>
-                        Sign Out
-                    </Dropdown.Item>
-                </DropdownButton>}
-            </Navbar>
-            <Row noGutters>
-                <Col xs={12} md={4}>
-                    <Row style={{justifyContent: 'center'}}>
-                        <Col>
-                            <Card style={{padding: 20, margin: 10, borderColor: '#153FF2', borderWidth: 1}}>
-                                <Card.Img variant="top" src={image} style={{width: 250, height: 250, display: 'flex', alignSelf: 'center'}}/>
-                                {/*<Button variant='clear' style={{padding: 5}} onClick={handleUploadAvatar}>*/}
-                                {/*    <TiUpload size={20}/>*/}
-                                {/*</Button>*/}
-                                <ImageUploader
-                                    fileContainerStyle={{padding: 0}}
-                                    singleImage={true}
-                                    withIcon={false}
-                                    withLabel={false}
-                                    buttonText='Choose Image'
-                                    onChange={(files, pictures) => {handleUploadAvatar(files, pictures)}}
-                                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                                    maxFileSize={5242880}
-                                />
-                                <Card.Body>
-                                    <Card.Title style={{textAlign: 'center', fontWeight: 'bold', color: '#153FF2'}}>{`@${userInfo.username}`}</Card.Title>
-                                    <Card.Text style={{textAlign: 'center'}}>
-                                        <strong>Rank:</strong>
-                                        {userInfo.rank === 'diamond' && <GiCutDiamond color='#00E4FF' size={36}/>}
-                                        {userInfo.rank === 'gold' && <FaMedal color='#FFAF03' size={36}/>}
-                                        {userInfo.rank === 'silver' && <RiMedalFill color='gray' size={36}/>}
-                                        {userInfo.rank === 'bronze' && <BiMedal color='#562A03' size={36}/>}
-                                    </Card.Text>
-                                    <Card.Text style={{textAlign: 'center'}}>
-                                        <strong>Winning Percentage: </strong>{userInfo.winningPercentage}
-                                    </Card.Text>
-                                    <Card.Text style={{textAlign: 'center'}}>
-                                        <strong>Joined Date: </strong>{userInfo.joinedDate}
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Col>
-                <Col xs={12} md={8}>
-                    <Row style={{justifyContent: 'center'}}>
-                        <Col>
-                            <Card style={{padding: 20, margin: 10, borderWidth: 0}}>
-                                <Card.Body>
-                                    <Card.Title style={{textAlign: 'center', fontWeight: 'bold', color: '#153FF2'}}>GAME HISTORY</Card.Title>
-                                    <Table hover>
-                                        <thead>
-                                        <tr>
-                                            <th>Played Date</th>
-                                            <th>Room Name</th>
-                                            <th>Rival</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {userInfo.games && userInfo.games.map((game) => <GameListItem key={game._id}
-                                                                                     item={game}
-                                                                                     handleClick={handleClick}/>)}
-                                        </tbody>
-                                    </Table>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
-        </div>
-    )
+    if (userInfo) {
+        return (
+            <div>
+                <Navbar style={{backgroundColor: '#E5F3FC'}}>
+                    <Navbar.Brand style={{color: '#153FF2', fontWeight: 'bold', flexGrow: 1}}>
+                        GOMOKU
+                    </Navbar.Brand>
+                    {user.displayName === profile &&
+                    <DropdownButton
+                        menuAlign="right"
+                        title={user.displayName}>
+                        <Dropdown.Item onClick={handleSignOutButton}>
+                            Sign Out
+                        </Dropdown.Item>
+                    </DropdownButton>}
+                </Navbar>
+                <Row style={{display: 'flex', justifyContent: 'center'}} noGutters>
+                    <Col xs={12} md={4}>
+                        <Row style={{display: 'flex', justifyContent: 'center'}}>
+                            <Col>
+                                <Card style={{padding: 20, margin: 10, borderColor: '#153FF2', borderWidth: 1}}>
+                                    <Card.Img variant="top" src={image}
+                                              style={{width: 250, height: 250, display: 'flex', alignSelf: 'center'}}/>
+                                    {profile === user.username &&
+                                    <ImageUploader
+                                        fileContainerStyle={{padding: 0}}
+                                        singleImage={true}
+                                        withIcon={false}
+                                        withLabel={false}
+                                        buttonText='Choose Image'
+                                        onChange={(files, pictures) => {
+                                            handleUploadAvatar(files, pictures)
+                                        }}
+                                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                        maxFileSize={5242880}/>}
+                                    <Card.Body>
+                                        <Card.Title style={{
+                                            textAlign: 'center',
+                                            fontWeight: 'bold',
+                                            color: '#153FF2'
+                                        }}>{`@${userInfo.displayName}`}</Card.Title>
+                                        <Card.Text style={{textAlign: 'center'}}>
+                                            <strong>Rank:</strong>
+                                            {userInfo.level === 'diamond' && <GiCutDiamond color='#00E4FF' size={36}/>}
+                                            {userInfo.level === 'gold' && <FaMedal color='#FFAF03' size={36}/>}
+                                            {userInfo.level === 'silver' && <RiMedalFill color='gray' size={36}/>}
+                                            {userInfo.level === 'bronze' && <BiMedal color='#562A03' size={36}/>}
+                                        </Card.Text>
+                                        <Card.Text style={{textAlign: 'center'}}>
+                                            <strong>Trophies: </strong>{userInfo.cups} <GiTrophyCup/>
+                                        </Card.Text>
+                                        <Card.Text style={{textAlign: 'center'}}>
+                                            <strong>Winning: </strong>{userInfo.wins} matches
+                                        </Card.Text>
+                                        <Card.Text style={{textAlign: 'center'}}>
+                                            <strong>Joined
+                                                Date: </strong>{userInfo.createdAt.substring(0, 10)}
+                                        </Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </Col>
+                    {profile === user.username &&
+                    <Col xs={12} md={8}>
+                        <Row style={{justifyContent: 'center'}}>
+                            <Col>
+                                <Card style={{padding: 20, margin: 10, borderWidth: 0}}>
+                                    <Card.Body>
+                                        <Card.Title style={{textAlign: 'center', fontWeight: 'bold', color: '#153FF2'}}>GAME
+                                            HISTORY</Card.Title>
+                                        <Table hover>
+                                            <thead>
+                                            <tr>
+                                                <th>Played Date</th>
+                                                <th>Room Name</th>
+                                                <th>Winner</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {userInfo.game_ids.map((game) => <GameListItem
+                                                key={game._id}
+                                                item={game}
+                                                handleClick={handleClick}/>)}
+                                            </tbody>
+                                        </Table>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </Col>}
+                </Row>
+            </div>
+        )
+    } else {
+        return (
+            <Container style={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <Spinner animation="border" variant='primary'/>
+            </Container>
+        )
+    }
 };
 
 export default Profile;
