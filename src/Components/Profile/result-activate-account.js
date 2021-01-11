@@ -6,7 +6,7 @@ import {RouteName} from "../../Constant/route";
 const ResultActivateAccount = (props) => {
     const history = useHistory()
     const handleGoToHomeButton = () => {
-        history.push(RouteName.Home)
+        history.replace(RouteName.Home)
     }
 
     return (

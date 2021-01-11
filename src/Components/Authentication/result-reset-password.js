@@ -6,7 +6,7 @@ import {RouteName} from "../../Constant/route";
 const ResultResetPassword = (props) => {
     const history = useHistory()
     const handleGoToSignInButton = () => {
-        history.push(RouteName.SignIn)
+        history.replace(RouteName.SignIn)
     }
 
     return (
