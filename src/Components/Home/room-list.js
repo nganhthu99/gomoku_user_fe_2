@@ -59,7 +59,7 @@ const RoomList = (props) => {
                     style={{width: '30%', margin: 2}}/>
                 <AddRoomModal handleCreateRoom={handleCreateRoom}/>
                 <Button variant="success"
-                        style={{width: '15%', margin: 2, marginRight: 30}}
+                        style={{margin: 2, marginRight: 30, padding: 5}}
                         onClick={handlePlayNow}>
                     Play Now
                 </Button>
