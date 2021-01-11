@@ -6,7 +6,12 @@ import {
     validatePasswordUtil,
     validateUsernameUtil
 } from "./render-validation";
-import {signInService} from "../../Core/Service/authentication-service";
+import {
+    checkUsernameEmailService,
+    signInService,
+    signUpService,
+    signUpSocialAccountService
+} from "../../Core/Service/authentication-service";
 import { useHistory } from "react-router-dom";
 import {RouteName} from "../../Constant/route";
 import GoogleLogin from 'react-google-login';
@@ -15,7 +20,7 @@ import { ImFacebook } from "react-icons/im";
 import { GrGoogle } from "react-icons/gr";
 
 const SignIn = (props) => {
-    const [user, ] = useState(localStorage.getItem('username'))
+    const [user, ] = useState(localStorage.getItem('user'))
     const history = useHistory()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -27,6 +32,7 @@ const SignIn = (props) => {
     }, [history, user])
 
     const handleForgetPasswordButton = () => {
+        history.push(RouteName.ForgetPassword)
     }
 
     const handleSignUpButton = () => {
@@ -37,10 +43,12 @@ const SignIn = (props) => {
         if (validateUsernameUtil(username) && validatePasswordUtil(password)) {
             signInService(username, password)
                 .then((response) => {
-                    if (response.status === 200 && response.data.success) {
+                    console.log(response.data)
+                    if (response.data.success) {
                         localStorage.setItem('token', response.data.token)
-                        localStorage.setItem('userId', response.data.userId)
-                        localStorage.setItem('username', response.data.username)
+                        localStorage.setItem('user', JSON.stringify(response.data.user))
+                        // localStorage.setItem('userId', response.data.userId)
+                        // localStorage.setItem('username', response.data.username)
                         history.push(RouteName.Home)
                     } else {
                         alert('Sign In Error: Wrong username or password!')
@@ -54,11 +62,80 @@ const SignIn = (props) => {
 
     const handleSignInFacebookButton = (response) => {
         console.log('FACEBOOK LOGIN: ', response)
-
+        const accessToken = response.accessToken
+        const fbid = response.id
+        const email = response.email
+        const username = email.split("@")[0]
+        checkUsernameEmailService(fbid, email)
+            .then((response) => {
+                if (response.data.status === 'old_user') {
+                    alert('old_user')
+                    console.log('RECIEVE: ',response.data)
+                    localStorage.setItem('token', accessToken)
+                    localStorage.setItem('user', JSON.stringify(response.data.user))
+                    history.push(RouteName.Home)
+                } else if (response.data.status === 'new_user') {
+                    alert('new_user')
+                    signUpSocialAccountService(fbid, email, username)
+                        .then((response) => {
+                            if (response.data.success) {
+                                localStorage.setItem('token', accessToken)
+                                localStorage.setItem('user', JSON.stringify(response.data.user))
+                                history.push(RouteName.Home)
+                            } else if (!response.data.success) {
+                                alert('Error signing in with Facebook.')
+                            }
+                        })
+                        .catch((error) => {
+                            alert(`Error signing in with Facebook. ${error}`)
+                        })
+                } else {
+                    alert('invalid')
+                    // alert('Error signing in with Facebook.')
+                }
+            })
+            .catch((error) => {
+                alert(`Error signing in with Facebook hahaha. ${error}`)
+            })
     }
 
     const handleSignInGoogleButton = (response) => {
         console.log('GOOGLE LOGIN: ', response)
+        const accessToken = response.accessToken
+        const ggid = response.googleId
+        const email = response.profileObj.email
+        const username = email.split("@")[0]
+        checkUsernameEmailService(ggid, email)
+            .then((response) => {
+                if (response.data.status === 'old_user') {
+                    alert('old_user')
+                    console.log('RECIEVE: ',response.data)
+                    localStorage.setItem('token', accessToken)
+                    localStorage.setItem('user', JSON.stringify(response.data.user))
+                    history.push(RouteName.Home)
+                } else if (response.data.status === 'new_user') {
+                    alert('new_user')
+                    signUpSocialAccountService(ggid, email, username)
+                        .then((response) => {
+                            if (response.data.success) {
+                                localStorage.setItem('token', accessToken)
+                                localStorage.setItem('user', JSON.stringify(response.data.user))
+                                history.push(RouteName.Home)
+                            } else if (!response.data.success) {
+                                alert('Error signing in with Facebook.')
+                            }
+                        })
+                        .catch((error) => {
+                            alert(`Error signing in with Facebook. ${error}`)
+                        })
+                } else {
+                    alert('invalid')
+                    // alert('Error signing in with Facebook.')
+                }
+            })
+            .catch((error) => {
+                alert(`Error signing in with Facebook hahaha. ${error}`)
+            })
     }
 
     return (
@@ -110,6 +187,7 @@ const SignIn = (props) => {
                                         <ImFacebook size={26}/>
                                     </Button>
                                 )}
+                                fields="name,email,picture"
                                 appId="2439172963055789"
                                 callback={handleSignInFacebookButton}
                             />
