@@ -50,9 +50,13 @@ const Ranking = (props) => {
         const token = localStorage.getItem('token')
         getUserList(token)
             .then((response) => {
+                console.log('TOKEN TEST RESPONSE: ',response)
                 if (response.status === 200) {
                     setListUsers(response.data.users)
                 }
+            })
+            .catch((error) => {
+                console.log('TOKEN TEST ERROR: ',error)
             })
     }, [])
 

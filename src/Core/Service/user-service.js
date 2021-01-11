@@ -9,16 +9,6 @@ export const getUserInfo = (username, token) => {
     })
 }
 
-// export const getUserByUsername = (username, token) => {
-//     console.log('token: ', token)
-//     console.log('username: ', username)
-//     return axios.get(ENDPOINT + 'users/user?username=' + username, {
-//         headers: {
-//             Authorization: token
-//         }
-//     })
-// }
-
 export const getUserByDisplayName = (username, token) => {
     return axios.get(ENDPOINT + 'users/user/display-name?name=' + username, {
         headers: {
@@ -28,9 +18,12 @@ export const getUserByDisplayName = (username, token) => {
 }
 
 export const getUserList = (token) => {
+    if (token.substring(0, 3) !== 'JWT') {
+        token = 'Bearer ' + token
+    }
     return axios.get(ENDPOINT + 'users/leaderboard', {
         headers: {
-            Authorization: token
+            Authorization: 'Bearer ' + token
         }
     })
 }

@@ -12,10 +12,11 @@ export const signUpService = (username, email, password, displayName) => {
     })
 }
 
-export const signUpSocialAccountService = (id, email, displayName) => {
+export const signUpSocialAccountService = (id, email, displayName, password='12345678') => {
     return axios.post(ENDPOINT + 'users/signup', {
         username: id,
         email,
+        password,
         displayName
     }, {
         validateStatus: () => true
