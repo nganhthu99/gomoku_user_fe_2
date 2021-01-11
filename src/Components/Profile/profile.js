@@ -16,6 +16,7 @@ import {imgurUploadImageService} from "../../Core/Service/image-upload-service";
 import queryString from 'query-string'
 import {GiTrophyCup} from "react-icons/gi";
 import {requestEmailVerification} from "../../Core/Service/authentication-service";
+import { FcApproval, FcHighPriority } from "react-icons/fc";
 
 const Profile = (props) => {
     const history = useHistory()
@@ -109,7 +110,7 @@ const Profile = (props) => {
                     </DropdownButton>}
                 </Navbar>
                 <Row style={{display: 'flex', justifyContent: 'center'}} noGutters>
-                    <Col xs={12} md={4}>
+                    <Col xs={12} md={5}>
                         <Row style={{display: 'flex', justifyContent: 'center'}}>
                             <Col>
                                 <Card style={{padding: 20, margin: 10, borderColor: '#153FF2', borderWidth: 1}}>
@@ -150,6 +151,21 @@ const Profile = (props) => {
                                             <strong>Joined
                                                 Date: </strong>{userInfo.createdAt.substring(0, 10)}
                                         </Card.Text>
+                                        {profile === user.displayName &&
+                                        <Card.Text style={{textAlign: 'center'}}>
+                                            <strong>Email: </strong>{userInfo.email}
+                                            {user.verified && <FcApproval style={{marginLeft: 3}}/>}
+                                            {!user.verified &&
+                                            <OverlayTrigger
+                                                placement='top'
+                                                overlay={
+                                                    <Tooltip>
+                                                        Unverified email. Account has not been activated.
+                                                    </Tooltip>
+                                                }>
+                                                <FcHighPriority style={{marginLeft: 3}}/>
+                                            </OverlayTrigger>}
+                                        </Card.Text>}
                                         {(profile === user.displayName) && user.verified &&
                                         <Card.Text style={{textAlign: 'center'}}>
                                             <strong>Email: </strong>{userInfo.email}
@@ -172,7 +188,7 @@ const Profile = (props) => {
                         </Row>
                     </Col>
                     {profile === user.username &&
-                    <Col xs={12} md={8}>
+                    <Col xs={12} md={7}>
                         <Row style={{justifyContent: 'center'}}>
                             <Col>
                                 <Card style={{padding: 20, margin: 10, borderWidth: 0}}>

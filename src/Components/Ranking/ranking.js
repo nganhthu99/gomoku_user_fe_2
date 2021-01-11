@@ -50,13 +50,9 @@ const Ranking = (props) => {
         const token = localStorage.getItem('token')
         getUserList(token)
             .then((response) => {
-                console.log('TOKEN TEST RESPONSE: ',response)
                 if (response.status === 200) {
                     setListUsers(response.data.users)
                 }
-            })
-            .catch((error) => {
-                console.log('TOKEN TEST ERROR: ',error)
             })
     }, [])
 
@@ -78,7 +74,7 @@ const Ranking = (props) => {
                 <Row style={{justifyContent: 'center'}}>
                     <h5 style={{flexGrow: 1, fontWeight: 'bold', color: '#153FF2', textAlign: 'center', paddingTop: 5}}>Ranking Chart</h5>
                     <Col xs={12}>
-                        {listUsers.map((item, index) => <RankingItem item={item} index={index} handleOnClick={handleOnClickPlayerProfile}/>)}
+                        {listUsers.map((item, index) => <RankingItem key={item.displayName} item={item} index={index} handleOnClick={handleOnClickPlayerProfile}/>)}
                     </Col>
                 </Row>
             </div>
