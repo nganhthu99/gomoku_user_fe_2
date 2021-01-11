@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Card, Col, Container, Dropdown, DropdownButton, Navbar, Row, Spinner, Table} from "react-bootstrap";
+import {Tooltip, OverlayTrigger, Button, Card, Col, Container, Dropdown, DropdownButton, Navbar, Row, Spinner, Table} from "react-bootstrap";
 import {
     getUserByDisplayName,
     updateUserAvatar
@@ -15,6 +15,7 @@ import ImageUploader from 'react-images-upload';
 import {imgurUploadImageService} from "../../Core/Service/image-upload-service";
 import queryString from 'query-string'
 import {GiTrophyCup} from "react-icons/gi";
+import {requestEmailVerification} from "../../Core/Service/authentication-service";
 
 const Profile = (props) => {
     const history = useHistory()
@@ -72,6 +73,23 @@ const Profile = (props) => {
             })
     }
 
+    const handleActivateButton = () => {
+        const token = localStorage.getItem('token')
+        requestEmailVerification(token, user.username)
+            .then((response) => {
+                if (response.status === 200) {
+                    alert(response.data.message)
+                } else if (response.status === 401) {
+                    alert('Email does not exist in the system.')
+                } else {
+                    alert('Error sending email. Please try again later.')
+                }
+            })
+            .catch((error) => {
+                alert('Email does not exist in the system.')
+            })
+    }
+
     if (userInfo && user) {
         return (
             <div>
@@ -97,7 +115,7 @@ const Profile = (props) => {
                                 <Card style={{padding: 20, margin: 10, borderColor: '#153FF2', borderWidth: 1}}>
                                     <Card.Img variant="top" src={image}
                                               style={{width: 250, height: 250, display: 'flex', alignSelf: 'center'}}/>
-                                    {profile === user.username &&
+                                    {profile === user.displayName &&
                                     <ImageUploader
                                         fileContainerStyle={{padding: 0}}
                                         singleImage={true}
@@ -132,6 +150,22 @@ const Profile = (props) => {
                                             <strong>Joined
                                                 Date: </strong>{userInfo.createdAt.substring(0, 10)}
                                         </Card.Text>
+                                        {(profile === user.displayName) && user.verified &&
+                                        <Card.Text style={{textAlign: 'center'}}>
+                                            <strong>Email: </strong>{userInfo.email}
+                                        </Card.Text>}
+                                        {(profile === user.displayName) && !user.verified &&
+                                        <Card.Text style={{textAlign: 'center'}}>
+                                            <OverlayTrigger
+                                                placement='top'
+                                                overlay={
+                                                    <Tooltip>
+                                                        Highly recommend you to activate your account by verifying email. In case you forget your password, we can use email to help you reset password.
+                                                    </Tooltip>
+                                                }>
+                                                <Button variant="primary" onClick={handleActivateButton}>Activate Account</Button>
+                                            </OverlayTrigger>
+                                        </Card.Text>}
                                     </Card.Body>
                                 </Card>
                             </Col>
