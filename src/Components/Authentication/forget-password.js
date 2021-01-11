@@ -5,13 +5,13 @@ import {
     validateUsernameUtil
 } from "./render-validation";
 import {requestVerificationService} from "../../Core/Service/authentication-service";
-import {useHistory} from "react-router-dom";
+// import {useHistory} from "react-router-dom";
 
 const ForgetPassword = (props) => {
     const [username, setUsername] = useState('')
     const [state, setState] = useState(1)
     const [message, setMessage] = useState('')
-    const history = useHistory()
+    // const history = useHistory()
 
     const handleSendEmailButton = () => {
         if (validateUsernameUtil(username)) {

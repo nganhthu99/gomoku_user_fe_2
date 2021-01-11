@@ -9,7 +9,6 @@ import {
 import {
     checkUsernameEmailService,
     signInService,
-    signUpService,
     signUpSocialAccountService
 } from "../../Core/Service/authentication-service";
 import { useHistory } from "react-router-dom";
