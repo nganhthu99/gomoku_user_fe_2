@@ -7,6 +7,7 @@ export const RouteName = {
     GameHistory: '/history',
     Ranking: '/ranking',
     ResultResetPassword: '/result-reset-password',
+    ResultActivateAccount: '/result-activate-account',
     ForgetPassword: '/forget-password',
     ResetPassword: '/reset-password'
 }

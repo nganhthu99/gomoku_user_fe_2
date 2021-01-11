@@ -12,6 +12,7 @@ import ResultResetPassword from "./Components/Authentication/result-reset-passwo
 import {RouteName} from "./Constant/route";
 import ForgetPassword from "./Components/Authentication/forget-password";
 import ResetPassword from "./Components/Authentication/reset-password";
+import ResultActivateAccount from "./Components/Profile/result-activate-account";
 
 /*
     SOCKET IO
@@ -40,6 +41,7 @@ function App() {
             <Route path={RouteName.SignIn} component={SignIn}/>
             <Route path={RouteName.ResultResetPassword} component={ResultResetPassword}/>
             <Route path={RouteName.ResetPassword} component={ResetPassword}/>
+            <Route path={RouteName.ResultActivateAccount} component={ResultActivateAccount}/>
             <Route path='/' component={SignIn}/>
         </Switch>
       </SocketProvider>
