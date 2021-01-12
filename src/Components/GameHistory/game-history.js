@@ -3,10 +3,11 @@ import {Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 import Board from "../Game/board";
 import {FiCircle, FiX} from "react-icons/fi";
 import ChatBox from "../Game/chat-box";
-import {getGameHistoryService, getGameService} from "../../Core/Service/game-service";
+import {getGameService} from "../../Core/Service/game-service";
 import {RouteName} from "../../Constant/route";
 import {useHistory} from "react-router-dom";
 import queryString from "query-string";
+import { GiQueenCrown } from "react-icons/gi";
 
 const GameHistory = (props) => {
     const history = useHistory()
@@ -48,7 +49,9 @@ const GameHistory = (props) => {
                                     <Card.Title style={{textAlign: 'center', color: '#153FF2'}}>
                                         <Button variant='outline-success' onClick={() => {
                                             handleOnClickPlayerProfile(game.turn.move_x)
-                                        }}>{`@${game.turn.move_x}`}</Button>
+                                        }}>
+                                            {`@${game.turn.move_x}`} {game.turn.move_x === game.winner && <GiQueenCrown/>}
+                                        </Button>
                                     </Card.Title>
                                     <div style={{textAlign: 'center'}}><FiX size={30} color='green'/></div>
                                 </Card.Body>
@@ -60,7 +63,9 @@ const GameHistory = (props) => {
                                     <Card.Title style={{textAlign: 'center', color: '#153FF2'}}>
                                         <Button variant='outline-danger' onClick={() => {
                                             handleOnClickPlayerProfile(game.turn.move_o)
-                                        }}>{`@${game.turn.move_o}`}</Button>
+                                        }}>
+                                            {`@${game.turn.move_o}`} {game.turn.move_o === game.winner && <GiQueenCrown/>}
+                                        </Button>
                                     </Card.Title>
                                     <div style={{textAlign: 'center'}}><FiCircle size={30} color='red'/></div>
                                 </Card.Body>
