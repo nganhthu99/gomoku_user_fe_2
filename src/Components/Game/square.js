@@ -6,23 +6,26 @@ const Square = (props) => {
     return (
         <Button variant="outline-primary"
                 style={props.isColored ? {
-                    height: 30,
-                    width: 30,
+                    display:'flex',
+                    height: 23,
+                    width: 23,
                     borderRadius: 0,
-                    fontSize: 15,
                     padding: 0,
                     margin: 0,
                     backgroundColor: "yellow"
                 } : {
-                    height: 30,
-                    width: 30,
+                    display:'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 23,
+                    width: 23,
                     borderRadius: 0,
-                    fontSize: 15,
                     padding: 0,
+                    margin: 0,
                 }}
                 onClick={props.onClickHandle}>
-            {props.value === 'X' && <IoCloseOutline color= 'green' size={26}/>}
-            {props.value === 'O' && <IoEllipseOutline color='red' size={22}/>}
+            {props.value === 'X' && <IoCloseOutline color= 'green' size={20}/>}
+            {props.value === 'O' && <IoEllipseOutline color='red' size={16}/>}
         </Button>
     )
 }

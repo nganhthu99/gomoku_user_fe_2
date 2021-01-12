@@ -11,7 +11,7 @@ import {MemoTimer} from "./CountdownTimer";
 import ResultModal from "./result-modal";
 import {RouteName} from "../../Constant/route";
 
-const GameCopy = (props) => {
+const Game = (props) => {
     const user = JSON.parse(localStorage.getItem('user'))
     const history = useHistory()
     const {socket,setSocket} = useContext(SocketContext)
@@ -26,10 +26,6 @@ const GameCopy = (props) => {
     const [gameResult, setGameResult] = useState(null)
 
     useEffect(() => {
-        // window.addEventListener("beforeunload", (e) => {
-        //     e.preventDefault();
-        //     return e.returnValue = 'Are you sure you want to exit game?';
-        // });
         return () => {
             if (socket) {
                 socket.disconnect()
@@ -46,7 +42,7 @@ const GameCopy = (props) => {
 
     useEffect(() => {
         if (socket === null) {
-            history.push(RouteName.Home)
+            history.replace(RouteName.Home)
         } else {
             socket.on('Someone-Join-Room', (data) => {
                 console.log(data)
@@ -193,4 +189,4 @@ const GameCopy = (props) => {
     )
 };
 
-export default GameCopy;
+export default Game;

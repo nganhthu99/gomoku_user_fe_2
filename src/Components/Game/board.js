@@ -1,8 +1,7 @@
 import React from "react";
 import Square from "./square";
-import {Container} from "react-bootstrap";
 
-export const BOARD_SIZE = 15
+export const BOARD_SIZE = 20
 
 const Board = (props) => {
     const renderSquare = (i) => {
@@ -25,7 +24,7 @@ const Board = (props) => {
             for (let j = 0; j < n; j++) {
                 column.push(renderSquare(n * i + j))
             }
-            row.push(<div key={i}>{column}</div>)
+            row.push(<div key={i} style={{display: 'flex', margin: 0}}>{column}</div>)
         }
         return row
     }
