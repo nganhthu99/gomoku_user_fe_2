@@ -8,6 +8,7 @@ import {
 import {resetPasswordService} from "../../Core/Service/authentication-service";
 import {useHistory} from "react-router-dom";
 import {RouteName} from "../../Constant/route";
+import queryString from "query-string";
 
 const ResetPassword = (props) => {
     const [password, setPassword] = useState('')
@@ -17,19 +18,26 @@ const ResetPassword = (props) => {
     const handleUpdatePassword = () => {
         if (validatePasswordUtil(password) &&
             validateConfirmPasswordUtil(confirmPassword, password)) {
-            const token = props.location.pathname.split("/reset-password/")[1]
+            const token = queryString.parse(props.location.search).token
             resetPasswordService(token, password)
                 .then((response) => {
                     if (response.status === 200) {
-                        history.replace(RouteName.ResultResetPassword)
-                    } else if (response.status === 401) {
-                        alert('Unable to find a valid token. Token may have expired.')
+                        history.replace({
+                            pathname: RouteName.ResultResetPassword,
+                            search: '?result=success',
+                        })
                     } else {
-                        alert('Error reset password. Please try again later.')
+                        history.replace({
+                            pathname: RouteName.ResultResetPassword,
+                            search: '?result=error',
+                        })
                     }
                 })
                 .catch((error) => {
-                    alert('Error reset password. Please try again later.')
+                    history.replace({
+                        pathname: RouteName.ResultResetPassword,
+                        search: '?result=error',
+                    })
                 })
         }
     }
