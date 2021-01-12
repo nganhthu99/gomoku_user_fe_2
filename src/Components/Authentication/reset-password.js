@@ -11,9 +11,9 @@ import {RouteName} from "../../Constant/route";
 import queryString from "query-string";
 
 const ResetPassword = (props) => {
+    const history = useHistory()
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const history = useHistory()
 
     const handleUpdatePassword = () => {
         if (validatePasswordUtil(password) &&
@@ -22,19 +22,19 @@ const ResetPassword = (props) => {
             resetPasswordService(token, password)
                 .then((response) => {
                     if (response.status === 200) {
-                        history.replace({
+                        history.push({
                             pathname: RouteName.ResultResetPassword,
                             search: '?result=success',
                         })
                     } else {
-                        history.replace({
+                        history.push({
                             pathname: RouteName.ResultResetPassword,
                             search: '?result=error',
                         })
                     }
                 })
                 .catch((error) => {
-                    history.replace({
+                    history.push({
                         pathname: RouteName.ResultResetPassword,
                         search: '?result=error',
                     })

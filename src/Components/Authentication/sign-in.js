@@ -19,14 +19,14 @@ import { ImFacebook } from "react-icons/im";
 import { GrGoogle } from "react-icons/gr";
 
 const SignIn = (props) => {
-    const [user, ] = useState(localStorage.getItem('user'))
     const history = useHistory()
+    const [user, ] = useState(localStorage.getItem('user'))
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
     useEffect(() => {
         if (user) {
-            history.push(RouteName.Home)
+            history.replace(RouteName.Home)
         }
     }, [history, user])
 
@@ -42,19 +42,18 @@ const SignIn = (props) => {
         if (validateUsernameUtil(username) && validatePasswordUtil(password)) {
             signInService(username, password)
                 .then((response) => {
-                    console.log(response.data)
-                    if (response.data.success) {
+                    if (response.status === 200) {
                         localStorage.setItem('token', response.data.token)
                         localStorage.setItem('user', JSON.stringify(response.data.user))
-                        // localStorage.setItem('userId', response.data.userId)
-                        // localStorage.setItem('username', response.data.username)
                         history.push(RouteName.Home)
+                    } else if (response.status === 401) {
+                        alert(response.data.msg)
                     } else {
-                        alert('Sign In Error: Wrong username or password!')
+                        alert('Error signing in. Please try again later.')
                     }
                 })
                 .catch((error) => {
-                    alert(`Sign In Error: ${error}`)
+                    alert('Error signing in. Please try again later.')
                 })
         }
     }
@@ -83,14 +82,16 @@ const SignIn = (props) => {
                             }
                         })
                         .catch((error) => {
-                            alert(`Error signing in with Facebook. ${error}`)
+                            alert(`Error signing in with Facebook: ${error}`)
                         })
+                } else if (response.data.status === 'locked_user'){
+                    alert('Your account has been locked permanently')
                 } else {
                     alert('Error signing in with Facebook.')
                 }
             })
             .catch((error) => {
-                alert(`Error signing in with Facebook hahaha. ${error}`)
+                alert(`Error signing in with Facebook: ${error}`)
             })
     }
 
@@ -118,14 +119,16 @@ const SignIn = (props) => {
                             }
                         })
                         .catch((error) => {
-                            alert(`Error signing in with Google. ${error}`)
+                            alert(`Error signing in with Google: ${error}`)
                         })
+                } else if (response.data.status === 'locked_user'){
+                    alert('Your account has been locked permanently')
                 } else {
                     alert('Error signing in with Google.')
                 }
             })
             .catch((error) => {
-                alert(`Error signing in with Google. ${error}`)
+                alert(`Error signing in with Google: ${error}`)
             })
     }
 

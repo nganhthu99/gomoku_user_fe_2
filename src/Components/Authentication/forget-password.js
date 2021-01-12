@@ -27,7 +27,7 @@ const ForgetPassword = (props) => {
                     }
                 })
                 .catch((error) => {
-                    alert('Email does not exist in the system.')
+                    alert('Error sending email. Please try again later.')
                 })
                 .finally(() => {
                     setIsLoading(false)
@@ -74,7 +74,7 @@ const ForgetPassword = (props) => {
                 <Row style={{justifyContent: 'center'}}>
                     <Col md={6} sx={12}>
                         <Card style={{padding: 20, margin: 10, borderColor: '#153FF2', borderWidth: 1}}>
-                            <Card.Title style={{textAlign: 'center'}}>{message}</Card.Title>
+                            <Card.Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 14}}>{message}</Card.Text>
                         </Card>
                     </Col>
                 </Row>

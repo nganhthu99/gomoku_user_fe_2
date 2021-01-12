@@ -8,9 +8,6 @@ const ResultResetPassword = (props) => {
     const history = useHistory()
     const [result, ] = useState(queryString.parse(props.location.search).result)
     const [message, setMessage] = useState('')
-    const handleGoToSignInButton = () => {
-        history.replace(RouteName.SignIn)
-    }
 
     useEffect(() => {
         if (result === 'success') {
@@ -19,6 +16,10 @@ const ResultResetPassword = (props) => {
             setMessage('Error resetting password')
         }
     }, [result])
+
+    const handleGoToSignInButton = () => {
+        history.replace(RouteName.SignIn)
+    }
 
     return (
         <Row style={{justifyContent: 'center'}}>

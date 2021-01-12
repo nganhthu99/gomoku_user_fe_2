@@ -34,7 +34,7 @@ const SignUp = (props) => {
                 .then((response) => {
                     if (response.data.success) {
                         alert('Signing up successfully.')
-                        history.push('/sign-in')
+                        history.replace(RouteName.SignIn)
                     } else if (!response.data.success) {
                         alert('Error signing up. Username or email already existed.')
                     }
