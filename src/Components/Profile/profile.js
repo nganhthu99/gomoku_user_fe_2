@@ -154,8 +154,17 @@ const Profile = (props) => {
                                         {profile === user.displayName &&
                                         <Card.Text style={{textAlign: 'center'}}>
                                             <strong>Email: </strong>{userInfo.email}
-                                            {user.verified && <FcApproval style={{marginLeft: 3}}/>}
-                                            {!user.verified &&
+                                            {userInfo.verified &&
+                                            <OverlayTrigger
+                                                placement='top'
+                                                overlay={
+                                                    <Tooltip>
+                                                        Verified email. Account has been activated.
+                                                    </Tooltip>
+                                                }>
+                                                <FcApproval style={{marginLeft: 3}}/>
+                                            </OverlayTrigger>}
+                                            {!userInfo.verified &&
                                             <OverlayTrigger
                                                 placement='top'
                                                 overlay={
@@ -166,11 +175,7 @@ const Profile = (props) => {
                                                 <FcHighPriority style={{marginLeft: 3}}/>
                                             </OverlayTrigger>}
                                         </Card.Text>}
-                                        {(profile === user.displayName) && user.verified &&
-                                        <Card.Text style={{textAlign: 'center'}}>
-                                            <strong>Email: </strong>{userInfo.email}
-                                        </Card.Text>}
-                                        {(profile === user.displayName) && !user.verified &&
+                                        {(profile === user.displayName) && !userInfo.verified &&
                                         <Card.Text style={{textAlign: 'center'}}>
                                             <OverlayTrigger
                                                 placement='top'

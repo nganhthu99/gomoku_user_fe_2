@@ -18,21 +18,21 @@ const RankingItem = (props) => {
     return (
         <Row style={{justifyContent: 'center', marginLeft: 70, marginRight: 70}} noGutters>
             <Col xs={2} md={1}>
-                <Card style={{backgroundColor: random_color, margin: 5}}>
+                <Card style={{backgroundColor: random_color, margin: 1}}>
                     <Card.Body style={{padding: 5, backgroundColor: random_color, display: 'flex', justifyContent: 'center'}}>
                         <Button variant='clear' style={{color: 'white', fontWeight: 'bold'}} onClick={handleOnClick}>{`#${Number(props.index) + 1}`}</Button>
                     </Card.Body>
                 </Card>
             </Col>
             <Col xs={6}>
-                <Card style={{backgroundColor: random_color, margin: 5}}>
+                <Card style={{backgroundColor: random_color, margin: 1}}>
                     <Card.Body style={{padding: 5, backgroundColor: random_color}}>
                         <Button variant='clear' style={{color: 'white', fontWeight: 'bold'}} onClick={handleOnClick}>{`@${props.item.displayName}`}</Button>
                     </Card.Body>
                 </Card>
             </Col>
             <Col xs={3} md={2}>
-                <Card style={{backgroundColor: random_color, margin: 5}}>
+                <Card style={{backgroundColor: random_color, margin: 1}}>
                     <Card.Body style={{padding: 5, backgroundColor: random_color, display: 'flex', justifyContent: 'center'}}>
                         <Button variant='clear' style={{color: 'white', fontWeight: 'bold'}} onClick={handleOnClick}>{`${props.item.cups}`} <GiTrophyCup/></Button>
                     </Card.Body>
@@ -67,7 +67,9 @@ const Ranking = (props) => {
         return (
             <div>
                 <Navbar style={{backgroundColor: '#E5F3FC'}}>
-                    <Navbar.Brand style={{color: '#153FF2', fontWeight: 'bold', flexGrow: 1}}>
+                    <Navbar.Brand
+                        onClick={() => {history.push('/home')}}
+                        style={{color: '#153FF2', fontWeight: 'bold', flexGrow: 1}} >
                         GOMOKU
                     </Navbar.Brand>
                 </Navbar>
