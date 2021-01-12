@@ -68,13 +68,10 @@ const SignIn = (props) => {
         checkUsernameEmailService(fbid, email)
             .then((response) => {
                 if (response.data.status === 'old_user') {
-                    alert('old_user')
-                    console.log('RECIEVE: ',response.data)
                     localStorage.setItem('token', accessToken)
                     localStorage.setItem('user', JSON.stringify(response.data.user))
                     history.push(RouteName.Home)
                 } else if (response.data.status === 'new_user') {
-                    alert('new_user')
                     signUpSocialAccountService(fbid, email, username)
                         .then((response) => {
                             if (response.data.success) {
@@ -89,8 +86,7 @@ const SignIn = (props) => {
                             alert(`Error signing in with Facebook. ${error}`)
                         })
                 } else {
-                    alert('invalid')
-                    // alert('Error signing in with Facebook.')
+                    alert('Error signing in with Facebook.')
                 }
             })
             .catch((error) => {
@@ -107,13 +103,10 @@ const SignIn = (props) => {
         checkUsernameEmailService(ggid, email)
             .then((response) => {
                 if (response.data.status === 'old_user') {
-                    alert('old_user')
-                    console.log('RECIEVE: ',response.data)
                     localStorage.setItem('token', accessToken)
                     localStorage.setItem('user', JSON.stringify(response.data.user))
                     history.push(RouteName.Home)
                 } else if (response.data.status === 'new_user') {
-                    alert('new_user')
                     signUpSocialAccountService(ggid, email, username)
                         .then((response) => {
                             if (response.data.success) {
@@ -128,12 +121,11 @@ const SignIn = (props) => {
                             alert(`Error signing in with Facebook. ${error}`)
                         })
                 } else {
-                    alert('invalid')
-                    // alert('Error signing in with Facebook.')
+                    alert('Error signing in with Facebook.')
                 }
             })
             .catch((error) => {
-                alert(`Error signing in with Facebook hahaha. ${error}`)
+                alert(`Error signing in with Facebook. ${error}`)
             })
     }
 
