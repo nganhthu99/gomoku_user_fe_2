@@ -12,8 +12,8 @@ import InvitationModal from "./invitation-modal";
 
 const Home = (props) => {
     const history = useHistory()
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const {socket, setSocket} = useContext(SocketContext)
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const [listUsers, setListUsers] = useState([])
     const [listRooms, setListRooms] = useState([])
 
@@ -21,7 +21,7 @@ const Home = (props) => {
 
     useEffect(() => {
         if (user === null) {
-            history.push(RouteName.SignIn)
+            history.replace(RouteName.SignIn)
         }
     }, [history, user])
 

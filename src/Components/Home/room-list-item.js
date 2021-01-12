@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Modal, Button, FormControl} from "react-bootstrap";
+import {Modal, Button, FormControl, FormGroup, FormLabel} from "react-bootstrap";
 import { MdLockOutline , MdLockOpen} from "react-icons/md";
 import { RiParentLine } from "react-icons/ri";
 
@@ -32,10 +32,12 @@ const RoomListItem = (props) => {
                     <Modal.Title>Enter room password</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <FormControl placeholder='Room password'
-                                 value={roomPassword}
-                                 onChange={e => setRoomPassword(e.target.value)}>
-                    </FormControl>
+                    <FormGroup>
+                        <FormLabel>Room password</FormLabel>
+                        <FormControl value={roomPassword}
+                                     onChange={e => setRoomPassword(e.target.value)}>
+                        </FormControl>
+                    </FormGroup>
                     {roomPassword && roomPassword !== props.item.password && <p style={{color: '#BF2F15'}}>Incorrect room password</p>}
                 </Modal.Body>
                 <Modal.Footer>
