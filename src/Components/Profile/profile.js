@@ -24,6 +24,8 @@ const Profile = (props) => {
     const [profile, ] = useState(queryString.parse(props.location.search).user)
     const [userInfo, setUserInfo] = useState(null)
     const [image, setImage] = useState(null)
+    const [isImageLoading, setIsImageLoading] = useState(false)
+    const [isActivateLoading, setIsActivateLoading] = useState(false)
 
     useEffect(() => {
         if (user === null) {
@@ -55,6 +57,7 @@ const Profile = (props) => {
     }
 
     const handleUploadAvatar = (file, picture) => {
+        setIsImageLoading(true)
         const token = localStorage.getItem('token')
         const separated = picture[0].split("base64,")
         imgurUploadImageService(separated[1])
@@ -68,6 +71,9 @@ const Profile = (props) => {
                             setImage(imageUrl)
                         }
                     })
+                    .finally(() => {
+                        setIsImageLoading(false)
+                    })
             })
             .catch((error) => {
                 console.log('IMGUR ERROR: ', error)
@@ -75,6 +81,7 @@ const Profile = (props) => {
     }
 
     const handleActivateButton = () => {
+        setIsActivateLoading(true)
         const token = localStorage.getItem('token')
         requestEmailVerification(token, user.username)
             .then((response) => {
@@ -88,6 +95,9 @@ const Profile = (props) => {
             })
             .catch((error) => {
                 alert('Email does not exist in the system.')
+            })
+            .finally(() => {
+                setIsActivateLoading(false)
             })
     }
 
@@ -114,8 +124,13 @@ const Profile = (props) => {
                         <Row style={{display: 'flex', justifyContent: 'center'}}>
                             <Col>
                                 <Card style={{padding: 20, margin: 10, borderColor: '#153FF2', borderWidth: 1}}>
+                                    {!isImageLoading &&
                                     <Card.Img variant="top" src={image}
-                                              style={{width: 250, height: 250, display: 'flex', alignSelf: 'center'}}/>
+                                              style={{width: 250, height: 250, display: 'flex', alignSelf: 'center'}}/>}
+                                    {isImageLoading &&
+                                    <Container style={{height: 250, width: 250, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                        <Spinner animation="border" variant='primary'/>
+                                    </Container>}
                                     {profile === user.displayName &&
                                     <ImageUploader
                                         fileContainerStyle={{padding: 0}}
@@ -177,6 +192,7 @@ const Profile = (props) => {
                                         </Card.Text>}
                                         {(profile === user.displayName) && !userInfo.verified &&
                                         <Card.Text style={{textAlign: 'center'}}>
+                                            {!isActivateLoading &&
                                             <OverlayTrigger
                                                 placement='top'
                                                 overlay={
@@ -185,7 +201,11 @@ const Profile = (props) => {
                                                     </Tooltip>
                                                 }>
                                                 <Button variant="primary" onClick={handleActivateButton}>Activate Account</Button>
-                                            </OverlayTrigger>
+                                            </OverlayTrigger>}
+                                            {isActivateLoading &&
+                                            <Container style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                                <Spinner animation="border" variant='primary'/>
+                                            </Container>}
                                         </Card.Text>}
                                     </Card.Body>
                                 </Card>

@@ -114,18 +114,18 @@ const SignIn = (props) => {
                                 localStorage.setItem('user', JSON.stringify(response.data.user))
                                 history.push(RouteName.Home)
                             } else if (!response.data.success) {
-                                alert('Error signing in with Facebook.')
+                                alert('Error signing in with Google.')
                             }
                         })
                         .catch((error) => {
-                            alert(`Error signing in with Facebook. ${error}`)
+                            alert(`Error signing in with Google. ${error}`)
                         })
                 } else {
-                    alert('Error signing in with Facebook.')
+                    alert('Error signing in with Google.')
                 }
             })
             .catch((error) => {
-                alert(`Error signing in with Facebook. ${error}`)
+                alert(`Error signing in with Google. ${error}`)
             })
     }
 
