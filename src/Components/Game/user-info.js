@@ -11,11 +11,6 @@ const UserInfo = (props) => {
     const [userInfo, setUserInfo] = useState(null)
 
     useEffect(() => {
-        // getUserByUsernameService(props.player)
-        //     .then((response) => {
-        //         setUserInfo(response)
-        //     })
-        // setUserInfo(getUserInfoService(props.player))
         const token = localStorage.getItem('token')
         getUserInfo(props.player, token)
             .then((response) => {
@@ -43,7 +38,7 @@ const UserInfo = (props) => {
                 Trophies: {userInfo.cups}<GiTrophyCup/>
             </Popover.Content>
             <Popover.Content style={{textAlign: 'center', padding: 5}}>
-                Winning: {userInfo.wins} matches
+                Winning Percentage: {`${(userInfo.wins / userInfo.game_ids.length).toFixed(2) * 100}%`}
             </Popover.Content>
         </Popover>
     ) : (

@@ -1,5 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import {Tooltip, OverlayTrigger, Button, Card, Col, Container, Dropdown, DropdownButton, Navbar, Row, Spinner, Table} from "react-bootstrap";
+import {
+    Tooltip,
+    OverlayTrigger,
+    Button,
+    Card,
+    Col,
+    Container,
+    Dropdown,
+    DropdownButton,
+    Navbar,
+    Row,
+    Spinner,
+    Table,
+} from "react-bootstrap";
 import {
     getUserByDisplayName,
     updateUserAvatar
@@ -160,7 +173,7 @@ const Profile = (props) => {
                                             <strong>Trophies: </strong>{userInfo.cups} <GiTrophyCup/>
                                         </Card.Text>
                                         <Card.Text style={{textAlign: 'center'}}>
-                                            <strong>Winning: </strong>{userInfo.wins} matches
+                                            <strong>Winning Percentage: </strong>{`${(userInfo.wins / userInfo.game_ids.length).toFixed(2) * 100}%`}
                                         </Card.Text>
                                         <Card.Text style={{textAlign: 'center'}}>
                                             <strong>Joined
