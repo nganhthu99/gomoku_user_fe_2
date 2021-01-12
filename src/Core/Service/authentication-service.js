@@ -47,9 +47,6 @@ export const requestVerificationService = (username) => {
 }
 
 export const resetPasswordService = (token, password) => {
-    if (token.substring(0, 3) !== 'JWT') {
-        token = 'Bearer ' + token
-    }
     return axios.post(ENDPOINT + 'users/reset-password?token=' + token, {
         newPassword: password
     }, {
