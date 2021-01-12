@@ -3,7 +3,6 @@ import Home from "./Components/Home/home";
 import SignIn from "./Components/Authentication/sign-in";
 import SignUp from "./Components/Authentication/sign-up";
 import { Switch, Route } from 'react-router-dom';
-import Game from "./Components/Game/game";
 import Profile from "./Components/Profile/profile";
 import {SocketProvider} from "./Core/Provider/socket-provider";
 import GameHistory from "./Components/GameHistory/game-history";
@@ -13,6 +12,7 @@ import {RouteName} from "./Constant/route";
 import ForgetPassword from "./Components/Authentication/forget-password";
 import ResetPassword from "./Components/Authentication/reset-password";
 import ResultActivateAccount from "./Components/Profile/result-activate-account";
+import Game from "./Components/Game/game";
 
 /*
     SOCKET IO

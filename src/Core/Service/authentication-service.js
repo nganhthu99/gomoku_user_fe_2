@@ -26,6 +26,8 @@ export const signInService = (username, password) => {
     return axios.post(ENDPOINT + 'users/signin', {
         username,
         password
+    }, {
+        validateStatus: () => true
     })
 }
 
