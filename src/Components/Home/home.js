@@ -8,7 +8,6 @@ import {SocketContext} from "../../Core/Provider/socket-provider";
 import {RouteName} from "../../Constant/route";
 import {ENDPOINT} from "../../Constant/ENDPOINT";
 import { GiTrophyCup } from "react-icons/gi";
-// import InvitationModal from "./invitation-modal";
 
 const Home = (props) => {
     const history = useHistory()
@@ -16,8 +15,6 @@ const Home = (props) => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const [listUsers, setListUsers] = useState([])
     const [listRooms, setListRooms] = useState([])
-
-    // const [invitation, setInvitation] = useState(null)
 
     useEffect(() => {
         if (user === null) {
@@ -45,10 +42,6 @@ const Home = (props) => {
             socket.on('Active-Rooms', (data) => {
                 setListRooms(data)
             })
-
-            // socket.on('Invitation', (data) => {
-            //     setInvitation(data)
-            // })
         }
     },[socket])
 
@@ -69,21 +62,6 @@ const Home = (props) => {
     const handleRankingButton = () => {
         history.push(RouteName.Ranking)
     }
-
-    // const handleReplyInvitation = (accept) => {
-    //     setInvitation(null)
-    //     socket.emit('Reply-Invitation', {
-    //         accept: accept,
-    //         id: invitation.id,
-    //         inviter: invitation.inviter
-    //     }, (returnData) => {
-    //         history.push({
-    //             pathname: '/game',
-    //             search: '?room=' + returnData.id,
-    //             state: returnData
-    //         })
-    //     })
-    // }
 
     if (user) {
         return (
@@ -117,8 +95,6 @@ const Home = (props) => {
                                   socket={socket}/>
                     </Col>
                 </Row>
-                {/*<InvitationModal invitation={invitation}*/}
-                {/*                 handleReplyInvitation={handleReplyInvitation}/>*/}
             </div>
         )
     } else {

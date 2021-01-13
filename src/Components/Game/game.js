@@ -48,7 +48,6 @@ const Game = (props) => {
             history.replace(RouteName.Home)
         } else {
             socket.on('Someone-Join-Room', (data) => {
-                console.log(data)
                 setRoom(data)
                 setTurn(data.game.turn)
                 setSquares(data.game.history[data.game.history.length - 1])
