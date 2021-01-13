@@ -12,7 +12,10 @@ const RoomList = (props) => {
 
     useEffect(() => {
         if (searchInput) {
-            setListRooms(prev => prev.filter(room => room.name.includes(searchInput) || room.id.includes(searchInput)))
+            setListRooms(prev => prev.filter(room => {
+                return room.name.includes(searchInput) ||
+                    room.id.toString().includes(searchInput)
+            }))
         } else {
             setListRooms(props.items)
         }
