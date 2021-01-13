@@ -42,20 +42,28 @@ const Profile = (props) => {
 
     useEffect(() => {
         if (user === null) {
+            history.replace(RouteName.SignIn)
+        }
+    }, [history, user])
+
+    useEffect(() => {
+        if (user === null) {
             history.push(RouteName.SignIn)
         }
     }, [history, user])
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        getUserByDisplayName(profile, token)
-            .then((response) => {
-                if (response.status === 200) {
-                    setUserInfo(response.data.user[0])
-                    setImage(response.data.user[0].avatar)
-                }
-            })
-    }, [profile])
+        if (user) {
+            const token = localStorage.getItem('token')
+            getUserByDisplayName(profile, token)
+                .then((response) => {
+                    if (response.status === 200) {
+                        setUserInfo(response.data.user[0])
+                        setImage(response.data.user[0].avatar)
+                    }
+                })
+        }
+    }, [user, profile])
 
     const handleSignOutButton = () => {
         localStorage.clear()

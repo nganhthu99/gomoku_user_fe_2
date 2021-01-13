@@ -13,15 +13,24 @@ const GameHistory = (props) => {
     const history = useHistory()
     const [game, setGame] = useState(null)
     const [step, setStep] = useState(0)
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        getGameService(queryString.parse(props.location.search).game,token)
-            .then((response) => {
-                if (response.status === 200) {
-                    setGame(response.data.game)
-                }
-            })
+        if (user === null) {
+            history.replace(RouteName.SignIn)
+        }
+    }, [history, user])
+
+    useEffect(() => {
+        if (user) {
+            const token = localStorage.getItem('token')
+            getGameService(queryString.parse(props.location.search).game, token)
+                .then((response) => {
+                    if (response.status === 200) {
+                        setGame(response.data.game)
+                    }
+                })
+        }
     }, [props.location])
 
     const handleOnClickPlayerProfile = (user) => {

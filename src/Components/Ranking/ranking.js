@@ -44,16 +44,25 @@ const RankingItem = (props) => {
 
 const Ranking = (props) => {
     const history = useHistory()
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const [listUsers, setListUsers] = useState(null)
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        getUserList(token)
-            .then((response) => {
-                if (response.status === 200) {
-                    setListUsers(response.data.users)
-                }
-            })
+        if (user === null) {
+            history.replace(RouteName.SignIn)
+        }
+    }, [history, user])
+
+    useEffect(() => {
+        if (user) {
+            const token = localStorage.getItem('token')
+            getUserList(token)
+                .then((response) => {
+                    if (response.status === 200) {
+                        setListUsers(response.data.users)
+                    }
+                })
+        }
     }, [])
 
     const handleOnClickPlayerProfile = (user) => {
