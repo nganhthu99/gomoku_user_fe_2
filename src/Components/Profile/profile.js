@@ -127,7 +127,7 @@ const Profile = (props) => {
             <div>
                 <Navbar style={{backgroundColor: '#E5F3FC'}}>
                     <Navbar.Brand
-                        onClick={() => {history.push('/home')}}
+                        onClick={() => {history.push(RouteName.Home)}}
                         style={{color: '#153FF2', fontWeight: 'bold', flexGrow: 1}}>
                         GOMOKU
                     </Navbar.Brand>
