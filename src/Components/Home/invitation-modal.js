@@ -8,7 +8,7 @@ const InvitationModal = (props) => {
                 <Modal.Title>INVITATION </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>{props.invitation ? `${props.invitation.inviter} has invited you to play` : ''}</p>
+                <p>{props.invitation ? `@${props.invitation.inviter} has invited you to play` : ''}</p>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary"

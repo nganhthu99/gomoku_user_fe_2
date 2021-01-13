@@ -150,7 +150,7 @@ const Game = (props) => {
                                 </Card.Text>
                                 <div style={{textAlign: 'center'}}>
                                     <Button variant="primary"
-                                            disabled={user.displayName !== turn.move_x}
+                                            disabled={!gameStart || user.displayName !== turn.move_x}
                                             onClick={handleSurrender}>
                                         <FiFlag/>
                                         Surrender
@@ -174,7 +174,7 @@ const Game = (props) => {
                                     {(isXTurn || !gameStart) && '00 : 00'}
                                 </Card.Text>
                                 <div style={{textAlign: 'center'}}>
-                                    <Button disabled={user.displayName !== turn.move_o}
+                                    <Button disabled={!gameStart || user.displayName !== turn.move_o}
                                             onClick={handleSurrender}
                                             variant="primary">
                                         <FiFlag/>

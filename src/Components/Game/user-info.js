@@ -23,22 +23,22 @@ const UserInfo = (props) => {
 
     const popOver = (userInfo) ? (
         <Popover>
-            <Popover.Title as="h3" style={{textAlign: 'center'}}>{`@${props.player}`}</Popover.Title>
+            <Popover.Title as="h3" style={{textAlign: 'center', color: '#153FF2'}}>{`@${props.player}`}</Popover.Title>
             <Popover.Content style={{display: 'flex', justifyContent: 'center'}}>
                 <Image src={userInfo.avatar} style={{width: 150, height: 150}}/>
             </Popover.Content>
             <Popover.Content style={{textAlign: 'center', padding: 5}}>
-                Rank:
+                <strong>Rank: </strong>
                 {userInfo.level === 'diamond' && <GiCutDiamond color='#00E4FF' size={36}/>}
                 {userInfo.level === 'gold' && <FaMedal color='#FFAF03' size={36}/>}
                 {userInfo.level === 'silver' && <RiMedalFill color='gray' size={36}/>}
                 {userInfo.level === 'bronze' && <BiMedal color='#562A03' size={36}/>}
             </Popover.Content>
             <Popover.Content style={{textAlign: 'center', padding: 5}}>
-                Trophies: {userInfo.cups}<GiTrophyCup/>
+                <strong>Trophies: </strong>{userInfo.cups}<GiTrophyCup/>
             </Popover.Content>
             <Popover.Content style={{textAlign: 'center', padding: 5}}>
-                Winning Percentage: {`${((userInfo.wins / userInfo.game_ids.length) * 100).toFixed(2)}%`}
+                <strong>Winning Percentage: </strong>{`${((userInfo.wins / userInfo.game_ids.length) * 100).toFixed(2)}%`}
             </Popover.Content>
         </Popover>
     ) : (

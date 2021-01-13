@@ -5,7 +5,7 @@ const ResultModal = (props) => {
     return (
         <Modal show={props.gameResult ? true : false}>
             <Modal.Header>
-                <Modal.Title>CONGRATULATION </Modal.Title>
+                <Modal.Title>GAME NOTIFICATION </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <p>{props.gameResult ? props.gameResult.message : ''}</p>
