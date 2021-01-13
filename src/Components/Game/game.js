@@ -10,6 +10,7 @@ import ChatBox from "./chat-box";
 import {MemoTimer} from "./CountdownTimer";
 import ResultModal from "./result-modal";
 import {RouteName} from "../../Constant/route";
+import InvitationDecline from "./invitation-decline-modal";
 
 const Game = (props) => {
     const user = JSON.parse(localStorage.getItem('user'))
@@ -24,6 +25,8 @@ const Game = (props) => {
 
     const [gameStart, setGameStart] = useState(false)
     const [gameResult, setGameResult] = useState(null)
+
+    const [invitationDecline, setInvitationDecline] = useState(null)
 
     useEffect(() => {
         return () => {
@@ -71,6 +74,10 @@ const Game = (props) => {
                 setGameStart(false)
                 setIsXTurn(true)
             })
+
+            socket.on('Invitation-Decline', (data) => {
+                setInvitationDecline(data)
+            })
         }
     }, [history, socket])
 
@@ -110,6 +117,10 @@ const Game = (props) => {
     const handleExitGame = () => {
         socket.disconnect()
         setSocket(null)
+    }
+
+    const handleCloseDeclineNoti = () => {
+        setInvitationDecline(null)
     }
 
     return (
@@ -184,6 +195,7 @@ const Game = (props) => {
                     handleNewGame={handleNewGame}
                     handleExitGame={handleExitGame}
                     gameResult={gameResult}/>
+                <InvitationDecline decliner={invitationDecline} handleClose={handleCloseDeclineNoti}/>
             </Col>
         </Row>
     )
