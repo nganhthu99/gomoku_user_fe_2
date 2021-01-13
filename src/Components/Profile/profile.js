@@ -173,7 +173,7 @@ const Profile = (props) => {
                                             <strong>Trophies: </strong>{userInfo.cups} <GiTrophyCup/>
                                         </Card.Text>
                                         <Card.Text style={{textAlign: 'center'}}>
-                                            <strong>Winning Percentage: </strong>{`${(userInfo.wins / userInfo.game_ids.length).toFixed(2) * 100}%`}
+                                            <strong>Winning Percentage: </strong>{`${((userInfo.wins / userInfo.game_ids.length) * 100).toFixed(2)}%`}
                                         </Card.Text>
                                         <Card.Text style={{textAlign: 'center'}}>
                                             <strong>Joined
